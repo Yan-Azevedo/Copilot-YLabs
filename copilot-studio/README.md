@@ -1,5 +1,9 @@
 # 🏖️ Agente de Solicitação de Aprovação de Férias — Copilot Studio
 
+<p align="Left">
+  <img src="assets\Logo-YLabs.png" alt="ArcSmith em ação" width="100%"/>
+</p>
+
 > **Caso genérico** da trilha de exemplos práticos de **Microsoft Copilot Studio**.
 > Mostra o "esqueleto" de um agente que **conversa, coleta dados e executa uma ação real** — sem código e usando só conectores nativos do Microsoft 365.
 > O mesmo agente é construído em **3 modelos** para comparar a evolução da plataforma.
