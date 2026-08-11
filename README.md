@@ -8,11 +8,7 @@
 </p>
 
 <p align="center">
-  https://img.shields.io/badge/Copilot-Studio-7C3AED?style=flat-squareio">
-  https://img.shields.io/badge/Copilot-Chat-2563EB?style=flat-square
-  6D4?style=flat-square" alt="M365">
-  https://img.shields.io/badge/M365-Agents%20Toolkit-EC4899?style=flat-square
-  ://img.shields.io/badge/N%C3%ADvel-Iniciante%20a%20Avan%C3%A7ado-16A34A?style=flat-square" alt="Nível">
+  <img src="assets\Capa-YLabs.png" alt="ArcSmith em ação" width="80%"/>
 </p>
 
 ---
