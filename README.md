@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="assets\Capa-YLabs.png" alt="ArcSmith em ação" width="80%"/>
+  <img src="assets\Capa-YLabs.png" alt="ArcSmith em ação" width="100%"/>
 </p>
 
 ---
