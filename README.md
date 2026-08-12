@@ -1,14 +1,11 @@
 <h1 align="center">Copilot YLabs</h1>
 
 <p align="center">
-  <img src="assets/Capa-Y/p>
-
-<p align="center">
   <em>Laboratórios práticos e didáticos para criar, testar e evoluir agentes com Microsoft Copilot e suas ferramentas.</em>
 </p>
 
 <p align="center">
-  <img src="assets\Capa-YLabs.png" alt="ArcSmith em ação" width="100%"/>
+  <img src="assets/Capa-YLabs.png" alt="Copilot YLabs — laboratórios práticos de agentes de IA" width="100%"/>
 </p>
 
 ---
@@ -71,7 +68,7 @@ Este repositório utiliza licenciamento por tipo de conteúdo:
 ### Atribuição sugerida
 
 > Copilot YLabs — criado por Yan Azevedo
-> Fonte: este repositório
+> Fonte: https://github.com/Yan-Azevedo/Copilot-YLabs
 > Licença do conteúdo: CC BY 4.0
 
 Microsoft, Microsoft 365, Copilot, Copilot Studio, Visual Studio Code, GitHub, GitHub Copilot e seus respectivos nomes, ícones e logotipos pertencem aos seus titulares e não fazem parte das licenças concedidas por este repositório.
