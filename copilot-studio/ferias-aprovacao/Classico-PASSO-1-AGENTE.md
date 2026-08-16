@@ -1,61 +1,70 @@
-# 🤖 Passo 1 — Criação do Agente no Copilot Studio (Experiência Clássica)
+# 🤖 Passo 1 — Criação e Configuração Inicial do Agente
 
-> 🎯 **Objetivo:** criar um agente no Microsoft Copilot Studio utilizando a experiência clássica baseada em tópicos.
+> 🎯 **Objetivo desta etapa:** criar o agente Holiday Assist no Microsoft Copilot Studio e deixar todas as configurações iniciais prontas antes da criação do tópico.
 
 > **Navegação:** Passo 1 de 3 · [Próximo → Passo 2: Criação do tópico](PASSO-2-TOPICO.md)
 
 ---
 
-## 📇 Dados do agente
+## 1. Criar o agente
 
-| Campo | Valor |
-|---|---|
-| **Nome do agente** | Holiday Assist |
-| **Título resumido** | Solicitação de férias com aprovação |
+Na página inicial do Copilot Studio, clique em:
 
-**Descrição:**
-
-Agente criado para receber pedidos de férias em linguagem natural, coletar as informações necessárias, encaminhar a solicitação para aprovação e retornar o resultado ao colaborador de forma simples, padronizada e rastreável dentro do Microsoft 365.
+```text
++ Criar agente em branco
+```
 
 ---
 
-## 1. Acessar o Microsoft Copilot Studio
+## 2. Nomear o agente
 
-1. Acesse o portal do Microsoft Copilot Studio.
-2. Selecione o ambiente onde o agente será criado.
-3. No menu lateral, clique em:
+Na janela **Nomeie seu agente**:
 
-✅ **Create**
-
----
-
-## 2. Iniciar a Criação do Agente
-
-Na tela de criação:
-
-1. Clique em:
-
-✅ **New Copilot**
-
-2. Aguarde a abertura do assistente de criação.
-
----
-
-## 3. Configurar as Informações Básicas
-
-### Nome
-
-No campo **Name**, informe:
+1. No campo **Insira o nome agente**, informe:
 
 ```text
 Holiday Assist
 ```
 
+2. Expanda **Configurações do agente (opcional)** e confira:
+
+| Campo | Valor |
+|---|---|
+| **Linguagem** | Português (Brasil) |
+| **Solução** | selecione a solução desejada (no exemplo: `YSolution`) |
+| **Nome do esquema** | preenchido automaticamente a partir do nome |
+
+3. Clique em:
+
+```text
+Criar
+```
+
+> ℹ️ **Solução** e **Nome do esquema** são obrigatórios (marcados com `*`). O nome do esquema é gerado sozinho; só ajuste se sua organização exigir um padrão específico.
+
 ---
 
-### Descrição
+## 3. Configurar o agente na Visão geral
 
-No campo **Description**, informe:
+Após a criação, o Copilot Studio abre a aba **Visão geral**. Configure os itens **nesta ordem**.
+
+### 3.1 Nome
+
+Já preenchido na etapa anterior. Para revisar, use **Editar** no cartão **Detalhes**.
+
+```text
+Holiday Assist
+```
+
+### 3.2 Imagem
+
+No cartão **Detalhes**, clique em **Editar** e defina a imagem/ícone do agente.
+
+> ℹ️ Nenhuma imagem específica foi definida para este material. Use o ícone padrão ou envie um de sua escolha — é opcional.
+
+### 3.3 Descrição
+
+No campo **Descrição**, informe:
 
 ```text
 O Holiday Assist é um agente conversacional voltado para ambiente corporativo e treinamentos práticos. Ele ajuda colaboradores a solicitar férias de forma simples, guiada e padronizada, coletando os dados essenciais do pedido e encaminhando a solicitação para aprovação de uma pessoa indicada no mesmo tenant.
@@ -63,11 +72,21 @@ O Holiday Assist é um agente conversacional voltado para ambiente corporativo e
 O agente atua como uma interface conversacional entre o colaborador e o fluxo de aprovação, reduzindo mensagens informais, evitando solicitações incompletas e demonstrando como processos internos podem ser estruturados com recursos nativos do Microsoft 365.
 ```
 
----
+> ℹ️ O campo aceita até **1024 caracteres**. Esta descrição usa cerca de 568.
 
-### Instruções
+### 3.4 Modelo
 
-No campo **Instructions**, informe:
+Na seção **Selecionar o modelo do seu agente**, escolha no dropdown:
+
+```text
+GPT-5 Chat
+```
+
+Caso seu ambiente não apresente esta opção, mantenha o modelo padrão do tenant.
+
+### 3.5 Instruções
+
+Na seção **Instruções**, clique em **Editar** e informe:
 
 ```text
 Você é o Holiday Assist, um agente corporativo especializado em conduzir solicitações simples de férias em ambiente de treinamento.
@@ -110,86 +129,133 @@ Se recusado, responda:
 Se ocorrer erro no fluxo ou ausência de resposta da aprovação, informe que não foi possível concluir a solicitação e oriente o usuário a revisar os dados informados ou tentar novamente.
 ```
 
+> ℹ️ Pode aparecer **1 Warning** em **Agent status**. É normal nesta fase — clique em **Review** para ver o alerta; ele costuma se resolver após publicar o agente.
+
 ---
 
-### Idioma
+## 4. Demais itens da Visão geral
 
-No campo **Language**, selecione:
+Estes itens aparecem mais abaixo na mesma tela. **Nenhum deles exige configuração nesta etapa** — apenas confira se estão como abaixo:
+
+| Item | Estado esperado | Ação |
+|---|---|---|
+| **Conhecimento** | vazio | Não adicionar fontes |
+| **Pesquisa na Web** | Desabilitado(a) | Manter desabilitado |
+| **Ferramentas** | vazio | Não adicionar (o Power Automate entra no Passo 3) |
+| **Work IQ** | Habilitado | Ver observação abaixo |
+| **Gatilhos** | vazio | Não adicionar |
+| **Agentes** | vazio | Não adicionar |
+| **Tópicos** | apenas os do sistema (Obrigado, Recomeçar, Saudação) | O tópico de férias é criado no Passo 2 |
+| **Solicitações sugeridas** | vazio | Não adicionar |
+
+> ⚠️ **Sobre o Work IQ:** no print ele está **Habilitado**. É a camada que conecta o agente a dados do Microsoft 365 (e-mails, calendário, Teams, arquivos) e possui **cobrança por uso**. Para este agente de treinamento, que não precisa desses dados, você pode **desabilitá-lo** para manter o escopo mínimo — ou mantê-lo como no print, se preferir. Não é obrigatório para o funcionamento do fluxo de férias.
+
+---
+
+## 5. Configurações do agente
+
+Abra as **Configurações** do agente e deixe cada item conforme abaixo (estado dos prints).
+
+### Orquestração
 
 ```text
-Português (Brasil)
+Usar a orquestração de IA generativa para as respostas dos agentes?
+→ Sim (respostas dinâmicas, usando ferramentas e conhecimentos disponíveis)
+```
+
+### Agentes conectados
+
+```text
+Permitir que outros agentes se conectem e usem este → Ativado
+```
+
+### Modelo
+
+```text
+Continuar usando Modelos desativados? → Desativado
+```
+
+### Respostas
+
+```text
+Formatação da resposta → deixar em branco
+```
+
+### Moderação
+
+```text
+Nível de moderação de conteúdo → Alta
+```
+
+### Comentários do Usuário
+
+```text
+Coletar reações do usuário a mensagens do agente → Ativado
+Aviso de isenção de responsabilidade → deixar em branco
+```
+
+### Conhecimento
+
+```text
+Permitir respostas sem fundamentação → Ativado
+Usar informações da Web → Desativado
+```
+
+### Recursos de processamento de arquivos
+
+```text
+Carregamentos de arquivo → Desativado
+Intérprete de código → Desativado
+```
+
+### Pesquisar
+
+```text
+Fundamentação de gráfico do locatário com pesquisa semântica → Ativado
 ```
 
 ---
 
-## 4. Definir Ambiente
-
-Na seção **Environment**:
-
-1. Localize o ambiente desejado.
-2. Selecione o ambiente onde o agente será armazenado.
-
-Caso exista apenas um ambiente disponível, mantenha a seleção atual.
-
----
-
-## 5. Criar o Agente
-
-Após preencher todas as informações:
-
-1. Revise os dados inseridos.
-2. Clique em:
-
-✅ **Create**
-
----
-
-## 6. Aguardar Provisionamento
-
-Após a criação:
-
-1. Aguarde o carregamento completo do agente.
-2. O Copilot Studio abrirá automaticamente a página principal do agente.
-
----
-
-## 7. Validar a Estrutura Inicial
-
-Após o carregamento:
-
-1. Verifique se o menu lateral apresenta as opções:
-
-✅ **Topics**
-✅ **Analytics**
-✅ **Publish**
-✅ **Settings**
-
-2. Confirme que o agente foi criado sem erros.
-
----
-
-## 🗂️ Estrutura Esperada
+## 🗂️ Estrutura esperada ao final da etapa
 
 ```text
-Copilot Studio
+Agente: Holiday Assist
 │
-└── Agente
-    │
-    ├── Nome
-    ├── Descrição
-    ├── Instruções
-    ├── Idioma
-    ├── Ambiente
-    │
-    ├── Topics
-    ├── Analytics
-    ├── Publish
-    └── Settings
+├── Detalhes
+│   ├── Nome ......................... Holiday Assist
+│   ├── Imagem ....................... opcional
+│   └── Descrição .................... preenchida
+│
+├── Modelo .......................... GPT-5 Chat
+├── Instruções ...................... preenchidas
+│
+├── Visão geral
+│   ├── Conhecimento ................. vazio
+│   ├── Pesquisa na Web .............. Desabilitado
+│   ├── Ferramentas .................. vazio
+│   ├── Work IQ ...................... Habilitado (ou desabilitado, ver nota)
+│   ├── Gatilhos ..................... vazio
+│   ├── Agentes ...................... vazio
+│   ├── Tópicos ...................... apenas do sistema
+│   └── Solicitações sugeridas ....... vazio
+│
+└── Configurações
+    ├── Orquestração ................. Generativa (Sim)
+    ├── Agentes conectados ........... Ativado
+    ├── Modelos desativados .......... Desativado
+    ├── Formatação da resposta ....... em branco
+    ├── Moderação .................... Alta
+    ├── Comentários do Usuário ....... Ativado
+    ├── Respostas sem fundamentação .. Ativado
+    ├── Usar informações da Web ...... Desativado
+    ├── Carregamentos de arquivo ..... Desativado
+    ├── Intérprete de código ......... Desativado
+    └── Gráfico do locatário ......... Ativado
 ```
 
 ---
 
-> ⚠️ **Importante:** nesta etapa não serão criados tópicos, entidades, variáveis, ações ou fluxos. O objetivo é apenas provisionar o agente base no Microsoft Copilot Studio para posterior configuração.
+> ✅ **Resultado esperado:** agente Holiday Assist criado, configurado e pronto para iniciar a criação do tópico de Solicitação de Férias.
 
 ---
 
