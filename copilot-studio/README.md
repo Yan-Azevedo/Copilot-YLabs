@@ -1,113 +1,77 @@
-# 🏖️ Agente de Solicitação de Aprovação de Férias — Copilot Studio
+# 🏖️ Caso 1 — Aprovação de Férias com Agente Conversacional
 
-<p align="Left">
-  <img src="assets\Logo-YLabs.png" alt="ArcSmith em ação" width="100%"/>
+> Treinamento prático de criação de um agente de solicitação de férias no **Microsoft Copilot Studio**.
+
+<p align="center">
+  <img src="../assets/Logo-YLabs.png" alt="Copilot YLabs — laboratórios práticos de agentes de IA" width="100%"/>
 </p>
 
-> **Caso genérico** da trilha de exemplos práticos de **Microsoft Copilot Studio**.
-> Mostra o "esqueleto" de um agente que **conversa, coleta dados e executa uma ação real** — sem código e usando só conectores nativos do Microsoft 365.
-> O mesmo agente é construído em **3 modelos** para comparar a evolução da plataforma.
+**Apresentador e área:** Yan Azevedo | Cloud Target
+**Área:** Inovação, adoção e treinamento prático em soluções com Microsoft 365 e Copilot Studio.
 
 ---
 
-## 🎯 O que este agente faz
+## 🎯 Caso apresentado
 
-O colaborador conversa com o agente para **pedir férias**. O agente coleta os dados, dispara uma **aprovação** ao gestor/colega e devolve o resultado.
+Foi apresentado um cenário de treinamento prático para criação de um agente de solicitação de férias no Microsoft Copilot Studio. O agente recebe o pedido do colaborador em linguagem natural, coleta informações básicas como data de início, data de fim, quantidade de dias, aprovador e observação, e aciona um fluxo de aprovação utilizando recursos nativos do Microsoft 365.
 
-```
-Usuário: "Quero pedir férias"
-   ↓  coleta: início, fim, dias, aprovador, observação
-   ↓  chama a ferramenta (agent flow)
-   ↓  envia aprovação (card no Teams + e-mail)
-   ↓  aprovador clica Aprovar ✅ / Recusar ❌
-   ↓  agente confirma o resultado ao colaborador
-```
+O aprovador pode ser um colega indicado por e-mail ou a própria pessoa, desde que esteja no mesmo tenant. A aprovação é enviada por meio dos canais Microsoft 365, como Teams e Outlook, e o resultado é retornado ao colaborador no próprio chat do agente.
 
 ---
 
-## 🗺️ Fluxograma do processo
+## ❗ Problema encontrado
 
-![Fluxograma do agente de aprovação de férias](assets/fluxograma-ferias.png)
+O processo de solicitação de férias, quando feito manualmente, pode depender de mensagens informais, e-mails sem padrão ou alinhamentos diretos entre colaborador e aprovador. Isso gera risco de informações incompletas, falta de padronização no pedido e pouca clareza sobre o status da aprovação.
 
-<details>
-<summary>📐 Versão Mermaid (editável — o GitHub renderiza automaticamente)</summary>
-
-```mermaid
-flowchart TD
-    A["👤 Usuário: 'quero pedir férias'"] --> B["🟣 Conversa: coleta dos dados<br/>(tópico OU orquestrador generativo)"]
-    B --> C["🔵 Chama a ferramenta<br/>Agent flow 'Enviar Aprovação de Férias'"]
-    C --> D["🟠 Start and wait for an approval<br/>card no Teams + e-mail ao aprovador"]
-    D --> E{"Aprovador decide?"}
-    E -->|Aprovar ✅| F["🟢 Férias APROVADAS"]
-    E -->|Recusar ❌| G["🔴 Férias RECUSADAS"]
-    F --> H["🔵 Notifica o colaborador<br/>Outlook / Teams"]
-    G --> H
-    H --> I["Fim do fluxo"]
-```
-
-</details>
+No contexto do treinamento, a dor principal é demonstrar um processo realista de negócio que seja simples o suficiente para ser construído em prática, mas que também mostre valor concreto na combinação entre agente conversacional, coleta de dados e aprovação humana.
 
 ---
 
-## 🧩 Os 3 modelos (mesma ferramenta, conversas diferentes)
+## 🎯 Objetivo
 
-| Arquivo | Modelo | Como conduz a conversa | Quando usar | Complexidade |
-|---|---|---|---|---|
-| **MODELO-1-CLASSICO.md** | 🕰️ Antigo (clássico) | Tópico comanda tudo (frases + perguntas fixas) | Base histórica / quem vem do Studio antigo | ⭐⭐⭐☆☆ |
-| **MODELO-2-COM-TOPICO.md** | 🧭 Novo, com tópico | Tópico conduz, com orquestração ligada | Precisa de **ordem fixa/validação** | ⭐⭐⭐☆☆ |
-| **MODELO-3-SEM-TOPICO.md** | ⚡ Novo, sem tópico | **Orquestrador generativo** conduz sozinho | **Criação básica (recomendado)** | ⭐⭐☆☆☆ |
+Criar um agente capaz de conduzir uma solicitação de férias do início ao fim em ambiente de treinamento. A solução deve receber o pedido em linguagem natural, coletar os dados necessários, encaminhar uma aprovação para o responsável informado e devolver ao colaborador o resultado da decisão.
 
-> 💡 A **ferramenta (agent flow)** que envia a aprovação é **idêntica** nos três. Muda só **quem conduz a conversa**.
-
-### 🔍 Qual escolher?
-- **Começando / laboratório rápido → Modelo 3 (sem tópico).** Menos peças; o orquestrador pergunta e responde sozinho.
-- **Preciso controlar ordem/validação → Modelo 2 (com tópico).**
-- **Quero mostrar de onde viemos → Modelo 1 (clássico).**
+O objetivo também é permitir que os participantes compreendam, na prática, como um agente pode transformar uma conversa em uma ação estruturada dentro do Microsoft 365.
 
 ---
 
-## 🧠 Orquestração generativa (o que mudou no Studio atual)
+## ✅ Problema que soluciona
 
-Os agentes novos já vêm com **orquestração generativa** ligada. Na prática, o agente:
-- **escolhe a ferramenta pela descrição** dela;
-- **gera sozinho as perguntas** para preencher os dados que faltam;
-- **redige a resposta** automaticamente.
+A solução reduz a dependência de solicitações manuais e mensagens sem padrão, garantindo que os dados mínimos sejam coletados antes do envio para aprovação. Também melhora a experiência do colaborador, que passa a interagir com um agente em linguagem simples, sem precisar montar manualmente um pedido ou seguir instruções dispersas.
 
-Por isso, no modelo novo, o **tópico virou opcional** — só é necessário quando se quer controle determinístico.
+Para o treinamento, o case soluciona a dificuldade de demonstrar automação de processos de forma tangível, usando um exemplo comum, fácil de entender e aplicável a outros cenários de aprovação.
 
 ---
 
-## 👥 Regra do aprovador (para a apresentação)
+## 💎 Valor da construção
 
-Para **incentivar a colaboração** durante o treinamento:
-- **1ª opção:** o **colega ao lado** — a pessoa informa o e-mail do colega, que recebe o card no Teams.
-- **2ª opção (fallback):** **a própria pessoa** — se estiver sozinha, aprova o próprio pedido só para ver o fluxo.
+O principal valor está em mostrar como um processo corporativo simples pode ser convertido em uma experiência guiada por IA conversacional e automação.
 
-> ℹ️ O aprovador **precisa estar no mesmo tenant**. Aprovadores externos não funcionam.
+A construção entrega valor porque:
 
----
-
-## 🧰 Peças usadas (só nativo M365)
-
-| Peça | Papel |
-|---|---|
-| **Agent flow** (a ferramenta) | Recebe os dados e executa a ação |
-| **When an agent calls the flow** | Gatilho acionado pelo agente |
-| **Start and wait for an approval** | Envia a aprovação (Teams + e-mail) |
-| **Respond to the agent** | Devolve o resultado (em tempo real, Async OFF) |
-| **Instruções / Tópico** | Conduzem a conversa (ver os 3 modelos) |
-
-Nenhum sistema externo. Tudo dentro do Microsoft 365.
+- Padroniza a coleta das informações necessárias para o pedido de férias.
+- Reduz retrabalho causado por solicitações incompletas.
+- Demonstra o uso de aprovação humana dentro de um fluxo automatizado.
+- Usa ferramentas já presentes no ecossistema Microsoft 365.
+- Facilita o entendimento de agentes conectados a ações práticas.
+- Serve como base reutilizável para outros processos simples, como pedido de ausência, home office, reembolso ou aprovação administrativa.
+- Mantém o escopo adequado para treinamento, sem depender de sistemas externos ou integrações complexas.
 
 ---
 
-## ✅ Pré-requisitos
-- Acesso ao **Microsoft Copilot Studio** e ao **Power Automate** no **mesmo ambiente**.
-- Um colega no mesmo tenant para testar (ou usar o próprio e-mail).
+## 📊 Complexidade
+
+**Baixa.**
+
+A complexidade é baixa porque o case utiliza apenas coleta de informações, envio de aprovação e retorno do resultado ao usuário. Não há integração com sistema de RH, consulta de saldo de férias, validação trabalhista, múltiplos níveis de aprovação ou banco de dados externo.
+
+A solução é adequada para ambiente de treinamento prático, pois possui escopo controlado, baixo risco técnico e permite demonstrar valor rapidamente com conectores nativos do Microsoft 365.
 
 ---
 
-## ▶️ Como usar esta trilha
-1. Leia este **README**.
-2. Escolha um modelo (**1**, **2** ou **3**) e siga o passo a passo do arquivo.
-3. Use o **EVOLUCAO.md** para mostrar como o agente cresce (v1 → v2 → v3) — sem reconstruir.
+## 🧭 Guias de construção
+
+- [MODELO-1-CLASSICO.md](MODELO-1-CLASSICO.md)
+- [MODELO-2-COM-TOPICO.md](MODELO-2-COM-TOPICO.md)
+- [MODELO-3-SEM-TOPICO.md](MODELO-3-SEM-TOPICO.md)
+- [EVOLUCAO.md](EVOLUCAO.md) — camadas de evolução do agente
