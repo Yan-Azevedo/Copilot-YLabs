@@ -87,7 +87,7 @@ Card de aprovação por e-mail  ->  Approve / Reject
 | Nome do solicitante | User.Email mapeado no tópico | IA (usa o usuário logado) |
 | Peça mais trabalhosa | O tópico (documento extenso) | **Deixou de existir** |
 
-> 👉 Quer comparar? Veja a versão clássica em [./Copilot-Studio-Classico.
+> 👉 Quer comparar? Veja a versão clássica em [./Copilot-Studio-Classico.]
 
 ---
 
