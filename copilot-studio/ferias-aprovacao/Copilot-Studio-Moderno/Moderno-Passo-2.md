@@ -135,42 +135,30 @@ Pedido de ferias registrado com sucesso e enviado para aprovacao. Voce sera noti
 
 ---
 
-### 5. Adicionar o nó de aprovação
+### 5. Configurar o nó "Iniciar e aguardar uma aprovação"
 
-Depois do Respond to the agent, clique no ➕ entre/abaixo dos nós (ou use o painel "Adicionar" à esquerda → Conector) e busque por aprovação.
-Selecione a ação: Iniciar e aguardar uma aprovação.
+Clique no nó "Iniciar e aguardar uma aprovação de..." (badge "Precisa ser configurado") e preencha o painel Configurar da direita, de cima para baixo:
 
-🔧 Este é o nó correto. Outros conectores parecidos (como "Criar uma aprovação") não bloqueiam a execução e não servem aqui — precisamos que o fluxo espere a resposta, que é o que "Iniciar e aguardar uma aprovação" faz.
-
-#### 5.1 Tipo de aprovação
-No campo Tipo de aprovação, selecione: Aprovar/Rejeitar – Primeiro a responder.
-ℹ️ Basta uma pessoa responder (aprovar ou rejeitar) para o fluxo continuar — coerente com um aprovador por pedido.
-
-#### 5.2 Título
-No campo Título (obrigatório):
-
+#### 5.1 Título (obrigatório)
 ```
 Aprovação de ferias
 ```
 
-#### 5.3 Atribuído a
-No campo Atribuído a (obrigatório): selecione uma pessoa específica do seu tenant — você mesmo ou um colega ao lado.
+#### 5.2 Texto sugerido (obrigatório)
+Este campo é o texto que aparece para o aprovador. Preencha:
+```
+Aprovar ou rejeitar esta solicitação de férias.
+```
 
-💡 Para efeito de treinamento, este campo fica fixo (uma pessoa escolhida manualmente), não dinâmico.
-⚠️ A entrada ApproverEmail continua existindo no fluxo, mas não é usada neste campo enquanto ele estiver fixo. Se depois quiser que o aprovador seja o e-mail informado na conversa, troque "Atribuído a" para usar o conteúdo dinâmico da entrada ApproverEmail.
-🔧 Se está testando sozinho, coloque a si mesmo aqui — não um colega. Se "Atribuído a" apontar para outra pessoa, o card de aprovação chega na caixa dela, não na sua. Parece "o flow não foi chamado", mas ele rodou — só a notificação foi para outro lugar. Antes de assumir falha, confira o Power Automate: Meus fluxos → Enviar Aprovacao Ferias Moderno → Histórico de execuções.
+#### 5.3 Atribuído a (obrigatório)
+Insira o nome ou o e-mail da pessoa que vai aprovar.
+- Se está testando sozinho, coloque o SEU próprio e-mail — assim o card chega na sua caixa.
+- Deve ser alguém do mesmo tenant.
 
-#### 5.4 Detalhes
-No campo Detalhes (opcional, aceita Markdown), monte um resumo combinando texto fixo com o valor de cada entrada:
+⚠️ Se apontar para outra pessoa, o card chega na caixa dela, não na sua. O fluxo roda mesmo assim — confira em Power Automate → Meus fluxos → Histórico de execuções antes de achar que falhou.
 
-- Digite o texto fixo do rótulo (ex.: "Solicitante:").
-- Passe o mouse sobre o campo — um ícone de raio aparece na borda direita.
-- Clique no raio. Um painel abre com a lista das entradas do gatilho.
-- Clique na entrada desejada — ela aparece como um chip azul dentro do campo.
-- Continue digitando os rótulos e inserindo os chips até completar o resumo.
-
-O resumo final deve ficar assim (os nomes entre colchetes são os chips inseridos pelo raio):
-
+#### 5.4 Detalhes (opcional, aceita Markdown)
+Monte o resumo do pedido. Digite o rótulo, depois clique no ícone de raio à direita do campo para inserir cada entrada como chip:
 ```
 Solicitante: [RequesterName]
 Periodo: [StartDate] e [EndDate]
@@ -178,15 +166,19 @@ Dias: [Days]
 Observacao: [Details]
 ```
 
-💡 Se quiser os rótulos em negrito no cartão, envolva cada rótulo com dois asteriscos ao digitar (o campo Detalhes aceita Markdown). É opcional.
+#### 5.5 Campos que ficam em branco
+- Link do Item: deixar vazio.
+- Descrição do Link do Item: deixar vazio.
 
-#### 5.5 Campos não utilizados
+#### 5.6 Parâmetros avançados
+- O painel mostra "Showing 2 of 6". Clique em "Mostrar tudo" para ver os 6 parâmetros.
+- Confirme que estão como padrão:
+  - Habilitar notificações: true
+  - Habilitar reatribuição: true
+- Procure entre eles um campo de TIPO DE APROVAÇÃO (ex.: "Aprovar/Rejeitar – Primeiro a responder"). Se existir, selecione essa opção. Se NÃO aparecer, o conector já usa o modo aprovar/rejeitar padrão — pode seguir.
 
-| Campo | Uso neste laboratório |
-|---|---|
-| Link do item | Deixar em branco — não há item externo a linkar |
-| Descrição do link do item | Deixar em branco |
-| Parâmetros avançados | Manter padrões: Habilitar notificações = Sim, Habilitar reatribuição = Sim |
+#### 5.7 Sobre o aviso de conexão
+Se aparecer "A configuração da conexão não está disponível neste ambiente", siga normalmente — isso costuma se resolver ao publicar. Após publicar, se o nó ainda acusar erro de conexão, abra o nó e confirme/refaça a conexão do conector de Aprovações.
 
 ---
 
