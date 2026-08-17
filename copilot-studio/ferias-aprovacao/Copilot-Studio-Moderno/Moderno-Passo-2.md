@@ -1,239 +1,220 @@
-## ⚙️ Passo 2 — Criação do Fluxo (Agent Flow) — Experiência Moderna
+## ⚙* Passo 2 — Criação do Fluxo de Tra*alho (Agent Flow) — Experiência Mo*erna
 
-🎯 **Objetivo desta etapa:** construir o fluxo que recebe os dados coletados pelo agente, confirma o recebimento e envia o pedido para aprovação de forma **assíncrona** — criado **direto do bloco Ferramentas**, sem passar por nenhum tópico.
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1 (Moderno-Passo-1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+🎯 **Objetivo desta etapa:***constru*r o fluxo de trabalho que recebe o* dados coletados pelo agente, conf*rma o recebimento e envia o pedido*para aprovação de forma **assíncro*a** — criado **direto do bloco Fer*amentas**, sem passar por nenhum t*pico.
+**Navegação:** Passo 2 de 3 * ⬅️ Voltar ao Passo 1 (Moderno-Pas*o-1.md) · Pró*imo → Passo 3: Conectar e testar (*oderno-Passo-3.md)
 
-> 🆕 **Diferença central para o Clássico:** no Clássico, o fluxo era criado **de dentro do tópico** (nó "Novo fluxo de agente"). Aqui **não há tópico** — o fluxo é criado a partir do bloco **Ferramentas** do próprio agente **Holiday Assist Moderno** (criado no Passo 1). O designer do fluxo, porém, é o **mesmo**.
-
----
-
-### ✅ Status deste documento
-
-Este passo cobre a construção completa do fluxo até a **publicação** — versão funcional mínima (registra o pedido e envia para aprovação). A conexão do fluxo como ferramenta e o mapeamento das entradas (IA generativa vs. valor fixo) acontecem no **Passo 3**. A condição de resultado e a notificação ao solicitante ficam como melhoria futura, descrita ao final.
+> 🆕 **Diferen*a central para o Clássico:** no Cl*ssico, o fluxo era criado **de d*ntro do tópico**. Aqui **não há tó*ico** — o fluxo é criado a partir *o bloco **Ferramentas** do próprio*agente **Holiday Assist Moderno**.*A plataforma chama ess* peça de **"fluxo de trabalho"** (*orkflow), mas o conceito é o mesmo*agent flow.
 
 ---
 
-### ⚙️ Decisões tomadas para este fluxo
+### ✅ Status des*e documento
 
-| Decisão | Escolha |
+Este passo cobre a co*strução complet* do fluxo até a **publicação** — v*rsão funcional mínima (registra o *edido e envia para aprovação). A c*nexão do fluxo como ferramenta e o*mapeamento das entradas (IA gener*tiva vs. valor fixo) acontecem no **Passo 3**. A condição de resultad* e a notificação ao solicitante fi*am como melhoria futura, descrita *o final.
+
+---
+
+### ⚙️ Dec*sões tomadas para este fluxo
+
+| De*isão | Escolha |
 |---|---|
-| Posição da aprovação | **Depois** do *Respond to the agent* (assíncrono — sem risco de timeout) |
-| Campo "Atribuído a" | **Fixo**, uma pessoa específica (para efeito de treinamento) |
-| Quem pode ser o aprovador | Você mesmo (o criador) **ou** um colega ao lado — desde que no mesmo tenant |
+| Posiç*o da aprovação | **Depois** do *Re*pond to the agent* (assíncrono — s*m risco de timeout) |*| Campo "Atribuído a" | **Fixo**, *ma pessoa específica (para efeito *e treinamento) |
+| Quem pode ser o*aprovador | Você mesmo (o criador)***ou***um colega ao lado — desde que no m*smo tenant |
 
-ℹ️ **Por que assíncrono:** um agent flow chamado por um agente tem limite de **100 segundos** para responder. Como a aprovação espera uma pessoa clicar — o que pode levar minutos —, ela precisa vir **depois** do *Respond to the agent*, nunca antes.
+ℹ️ **Por que assíncr*no:** um fluxo chamado por um agen*e tem lim*te de **100 segundos** para respon*er. Como a aprovação espera uma pe*soa clicar — o que pode levar minu*os —, ela precisa vir **depois** d* *Respond to the agent*, nunca ant*s.
 
----
-
+---*
 ### ✅ Pré-requisitos
 
-- Agente **Holiday Assist Moderno** criado e configurado, com conhecimento adicionado (ver Moderno-Passo-1.md).
-- Orquestração generativa nativa (confirmado no Passo 1, seção 7).
+- Agente ***oliday Assist Moderno** criado e c*nfigurado, com conhecimento adicio*ado (ver Moderno-Passo-1.md).
 
----
+---*
+### 1. Ab*ir o designer do fluxo (a partir d* Ferramentas)
 
-### 1. Abrir o designer do fluxo (a partir de Ferramentas)
+- No agente **Holid*y Assist Moderno**, aba **Criar**,*clique no bloco **Ferramentas** (c*luna direita) — ou no ***** ao lado dele.
+- Abre o painel **"Adicionar uma ferramenta"**, com *s abas: *Em destaque · Protocolo d* Contexto do Modelo (*CP) · Conectores · Fluxos de traba*ho*.
+- Clique na aba:
+  ✅ **Fluxos*de trabalho**
+- No canto superior *ireito do painel, clique no botão:*  ✅ *** Adicionar**
 
-- No agente **Holiday Assist Moderno**, aba **Criar**, localize o bloco **Ferramentas** (coluna direita).
-- Clique no **➕** do bloco **Ferramentas**.
-- No painel **Adicionar ferramenta**, escolha:
-  ✅ **Novo fluxo de agente** *(New agent flow)*
+📌 **Atenção:** a ab* "Fluxos de trabalho" também lista*fluxos que já existem no ambiente *ex.: *Enviar Aprovacao de Fer*as* do lab clássico, *Save Summary*). **Não clique num existente** — *lique em **"➕ Adicionar"** para cr*ar um **novo**.
 
-Isso abre o **designer do fluxo** já com a estrutura inicial pronta:
+Isso ab*e o **designer do fluxo** já com a*estrutura inicial pronta, com o tí*ulo provisório **"Fluxo de trabalh* sem título"** (badge *Rascunho** e dois nós conectados:
 ```
-Quando um agente chama o fluxo   (gatilho)
+When a* agent calls the flow   (gatilho —*nome mantido em inglês pela plataf*rma)
         ↓
-Respond to the agent             (resposta — nome mantido em inglês pela plataforma)
+Respond to the agen*           (resposta — nome mantid* em inglês pela*plataforma)
 ```
 
-🚨 **Modo Expresso / resposta assíncrona precisa estar DESLIGADO.** Este toggle aparece no nó do gatilho. **Não pode estar ativo** neste laboratório — confirme que está desligado antes de publicar. Com ele ligado, o fluxo responde antes da hora e a aprovação não é aguardada corretamente.
-
-Não é necessário criar esses dois nós manualmente. O trabalho começa configurando as **entradas** do gatilho.
+ℹ️ **Layout do de*igner:** à **esquerda**, o painel **"Adicionar"** (Agente, Classifica*, M365 Copilot, Revis*o humana, Conector, Função, Variáv*l, If/Else, Loop, Observação). À **direita**, o painel de propriedade* do nó selecionado. No **topo**: a*as *Criar · Atividade · Monitorame*to* e os*botões de **salvar (💾)**, **testa* (▶)** e **Publicar**.
 
 ---
 
-### 2. Adicionar as entradas do gatilho
+### 2* Adicionar as entradas do gatilho
+*Clique no nó **When an agent calls*the flow**. No painel direito aparece:
+- ***ipo de gatilho:** *"Quando um agen*e chama o fluxo de trabalho — Disp*rar como uma ferramenta de um agen*e"* (já vem correto, não*altere).
+- **Entradas:** com o bot*o **➕ Adicionar uma entrada**.
 
-No nó **Quando um agente chama o fluxo**:
+Pa*a cada entrada:
+- Clique em **➕ Ad*cionar uma entrada**.
+- Selecione * tipo:*  ✅ **Texto**
+- Uma caixa à direit* pode vir com um texto padrão (ex.* *"Insira sua entrada aqui"*). **A*ague esse texto** se a*arecer — não some sozinho.
+- No ca*po de nome, digite o nome da entra*a conforme a tabela.
+- Repita para*todas.
 
-- Clique em **➕ Adicionar uma entrada**.
-- Um menu de tipos abre. Selecione:
-  ✅ **Texto**
-- Dois campos aparecem: o **nome da entrada** (à esquerda) e uma caixa à direita já preenchida com o texto padrão:
-```
-Insira sua entrada aqui
-```
-  **Apague esse texto** — ele não some sozinho, é texto real que precisa ser removido manualmente.
-- No campo de nome, digite o nome da entrada conforme a tabela.
-- Repita o processo (**➕ Adicionar uma entrada → Texto → apagar o texto padrão → nomear**) para todas.
-
-| # | Nome da entrada | Tipo |
-|---|---|---|
-| 1 | RequesterName | Texto |
+| #*| Nome da entrada | Tipo |
+|---|--*|---|
+| 1 | RequesterName | Texto *
 | 2 | ApproverEmail | Texto |
-| 3 | StartDate | Texto |
-| 4 | EndDate | Texto |
-| 5 | Days | Texto |
-| 6 | Details | Texto |
+| 3*| StartDate | Texto |
+| 4 | EndDat* | Texto |*| 5 | Days | Texto |
+| 6 | Details*| Texto |
 
-📌 **Todas as entradas são do tipo Texto**, inclusive as datas e a quantidade de dias — no modelo moderno, os valores chegam do orquestrador como texto e são mais simples de tratar assim (mesmo princípio do Clássico).
+📌 **Todas as entradas *ão do tipo Texto**, inclusive as d*tas e a quantidade de dias — os va*ores chegam do orquestrador como t*xto e*são mais simples de tratar assim (*esmo princípio do Clássico).
 
-ℹ️ **Por que só 6 entradas (sem RequesterEmail):** nesta versão base, o solicitante não é notificado por e-mail — o nome dele (`RequesterName`) vem automaticamente do usuário logado no Passo 3. Se depois você quiser notificar quem pediu, adicione uma entrada **RequesterEmail** (ver melhoria futura ao final).
-
----
-
-### 3. Renomear o fluxo
-
-🔧 As **entradas** (passo 2) podem ser nomeadas diretamente. O que **exige salvar primeiro** é o **nome do fluxo**.
-
-- Adicione as seis entradas normalmente (passo 2).
-- Para renomear o **fluxo em si** (o título geral), primeiro clique em:
-  ✅ **Salvar rascunho** (canto superior direito)
-- Só depois de salvar, o nome do fluxo fica editável. Renomeie para:
-```
-Enviar Aprovacao Ferias Moderno
-```
-- Salve novamente após renomear.
-
-📌 Nome **com "Moderno"** para não colidir com o fluxo do laboratório clássico ("Enviar Aprovacao de Ferias"), que pode existir no mesmo ambiente.
-⚠️ **Editar o nome do fluxo antes de salvar o rascunho pela primeira vez não funciona.** Sempre salve primeiro, depois renomeie.
+ℹ️ **Por que só 6 entradas (sem Request*rEmail):** nesta versão base, o so*icitante não é notificado por e-ma*l — o nome d*le (`RequesterName`) vem automatic*mente do usuário logado no Passo 3* Se depois quiser notificar quem p*diu, adicione uma entrada **Reques*erEmail** (ver melhoria futura ao *inal).
 
 ---
 
-### ✅ Checkpoint 1
+### *. Nomear o fluxo
 
-O nó **Quando um agente chama o fluxo** deve mostrar as seis entradas, todas do tipo Texto (ícone "AA"):
+- Clique no títu*o **"Fluxo de trabalho sem título"** (topo esquerdo, ao lado de *Holi*ay Assist Moderno >*).
+- Renomeie para:
+```
+Enviar Apr*vacao Ferias Moderno
+```
+- Clique *o ícone **💾 Salvar** (topo direit*) para grav*r o rascunho.
+
+📌 Nome **com "Mode*no"** para não colidir com o fluxo*do lab clássico ("Enviar Aprovacao*de Ferias"), que aparece no m*smo ambiente (visto no painel de f*rramentas).
+💡 Se o título não fic*r editável de primeira, clique em **💾 Salvar** uma vez e*tente renomear novamente.
+
+---
+
+##* ✅ Checkpoint 1
+
+O nó **When an ag*nt calls the flow** deve mostrar a* seis entradas, todas do tipo Text*:
 ```
 RequesterName
-ApproverEmail
+Approver*mail
 StartDate
 EndDate
 Days
-Details
+Detail*
 ```
 
 ---
 
-### 4. Configurar o Respond to the agent
+### 4. Configurar o Res*ond to the agent
 
-No nó **Respond to the agent**:
+Clique no nó **R*spond to the agent**:
 
-- Clique em **➕ Adicionar uma saída**.
-- Escolha o tipo **Texto**.
-- Nomeie a saída:
+- Adicione *ma **saída** do tipo **Texto**.
+- *omeie*a saída:
 ```
 Resultado
 ```
-- No valor da saída, escreva a confirmação de envio (sem afirmar aprovação, que ainda não aconteceu):
+- No va*or da saída, escreva a confirmação*de envio (sem afirmar aprovação, q*e ainda não aconteceu):
 ```
-Pedido de ferias registrado com sucesso e enviado para aprovacao. Voce sera notificado assim que houver uma resposta.
+Pedido*de ferias registrado com sucesso e*enviado para aprovacao. Vo*e sera notificado assim que houver*uma resposta.
 ```
 
-✅ Como a aprovação vem **depois** deste nó, o agente responde ao colaborador imediatamente com esta confirmação — sem esperar ninguém clicar.
+✅ Como a aprova*ão vem **depois** deste nó, o agen*e responde *o colaborador imediatamente com es*a confirmação — sem esperar ningué* clicar.
 
 ---
 
-### 5. Adicionar o nó de aprovação
+### 5. Adicionar o *ó de aprovação
 
-Abaixo de **Respond to the agent**, clique no ícone **➕** e busque por *aprovação*.
-Selecione a ação:
-✅ **Iniciar e aguardar uma aprovação**
+Depois do **Respon* to the agent**, clique no ***** entre/abaixo dos nós (ou use o *ainel **"Adicionar"** à esquerda →***Conector**) e busque por *aprova*ão*.
+Selecione a *ção:
+✅ **Iniciar e aguardar uma ap*ovação**
 
-🔧 Este é o nó correto. Outros conectores parecidos (como "Criar uma aprovação") **não bloqueiam a execução** e não servem aqui — precisamos que o fluxo espere a resposta, que é o que "Iniciar e aguardar uma aprovação" faz.
+🔧 Este é o nó correto. *utros conectores parecidos (como "*riar uma aprovação") **não bloquei*m a*execução** e não servem aqui — pre*isamos que o fluxo espere a respos*a, que é o que "Iniciar e aguardar*uma aprovação" faz.
 
-#### 5.1 Tipo de aprovação
-No campo **Tipo de aprovação**, selecione:
-✅ **Aprovar/Rejeitar – Primeiro a responder**
-ℹ️ Basta **uma pessoa** responder (aprovar ou rejeitar) para o fluxo continuar — coerente com um aprovador por pedido.
+#### 5.1 Tipo*de aprovação
+No*campo **Tipo de aprovação**, selec*one:
+✅ **Aprovar/Rejeitar – Primei*o a responder**
+ℹ️ Basta **uma pes*oa** responder (aprovar ou rejeita*) para o*fluxo continuar — coerente com um *provador por pedido.
 
-#### 5.2 Título
-No campo **Título** *(obrigatório)*:
+#### 5.2 Tít*lo
+No campo **Título** *(obrigatór*o)*:
 ```
 Aprovação de ferias
 ```
 
-#### 5.3 Atribuído a
-No campo **Atribuído a** *(obrigatório)*:
-Selecione **uma pessoa específica do seu tenant** — você mesmo ou um colega ao lado.
+*### 5.3 Atribuído a
+No campo***Atribuído a** *(obrigatório)*:
+S*lecione **uma pessoa específica do*seu tenant** — você mesmo ou um co*ega ao lado.
 
-💡 **Para efeito de treinamento**, este campo fica **fixo** (uma pessoa escolhida manualmente), não dinâmico.
-⚠️ A entrada **ApproverEmail** continua existindo no fluxo, mas **não é usada** neste campo enquanto ele estiver fixo. Se depois você quiser que o aprovador seja o e-mail informado na conversa, troque "Atribuído a" para usar o **conteúdo dinâmico** da entrada ApproverEmail.
-🔧 **Se está testando sozinho, coloque a si mesmo aqui** — não um colega. Se "Atribuído a" apontar para outra pessoa, o card de aprovação chega na caixa **dela**, não na sua. Parece "o flow não foi chamado", mas ele rodou — só a notificação foi para outro lugar. **Antes de assumir falha, confira o Power Automate:** Meus fluxos → Enviar Aprovacao Ferias Moderno → Histórico de execuções.
+💡 **Para efeito de *reinamento**, este campo fica **fi*o** (u*a pessoa escolhida manualmente), n*o dinâmico.
+⚠️ A entrada **Approve*Email** continua existindo no flux*, mas **não é usada** neste campo *nquanto ele estiver fixo. Se depoi* quiser que*o aprovador seja o e-mail informad* na conversa, troque "Atribuído a"*para usar o **conteúdo dinâmico** *a entrada ApproverEmail.
+🔧 **Se e*tá*testando sozinho, coloque a si mes*o aqui** — não um colega. Se "Atri*uído a" apontar para outra pessoa,*o card de aprovação chega na caixa***dela**,*não na sua. Parece "o flow não foi*chamado", mas ele rodou — só a not*ficação foi para outro lugar. **An*es de assumir falha, confira o*Power Automate:** Meus fluxos → En*iar Aprovacao Ferias Moderno → His*órico de execuções.
 
-#### 5.4 Detalhes
-No campo **Detalhes** *(opcional, aceita Markdown)*, monte um resumo combinando texto fixo com o valor de cada entrada:
+#### 5.4 Deta*hes
+No campo **Detalhes** *(opcional, aceita Markdown)*, m*nte um resumo combinando texto fix* com o valor de cada entrada:
 
-- Digite o texto fixo, por exemplo `**Solicitante:**`.
-- Passe o mouse sobre o campo — um ícone de **raio (⚡)** aparece na borda direita.
-- Clique no raio. Um painel abre com a lista das entradas do gatilho.
-- Clique na entrada desejada — ela aparece como um **chip azul** dentro do campo.
-- Continue digitando o texto fixo e inserindo os chips até completar o resumo.
+- D*gite o texto fixo, por exemplo `*****icitante:**`.
+- Passe o m*use sobre o campo — um ícone de ***aio (⚡)** aparece na borda direita*
+- Clique no raio. Um painel abre *om a lista das entradas do gatilho*
+- Clique na*entrada desejada — ela aparece com* um **chip azul** dentro do campo.*- Continue digitando o texto fixo * inserindo os chips até completar * resumo.
 
 Resultado final:
+```***Solicitante:** [RequesterName]
+**Periodo:** [StartDate] e [EndDate]***Dias:** [Days]
+**Observacao:** [*etails]
 ```
-**Solicitante:** [RequesterName]
-**Periodo:** [StartDate] e [EndDate]
-**Dias:** [Days]
-**Observacao:** [Details]
-```
-✅ Onde aparece `[Nome]`, é um **chip inserido pelo raio (⚡)**, não texto digitado.
+✅ Onde aparece `[Nome]*, é um ***hip inserido pelo raio (⚡)**, não *exto digitado.
 
-#### 5.5 Campos não utilizados
+#### 5.5 Campos nã* utilizados
 
-| Campo | Uso neste laboratório |
+| Campo | Uso neste l*boratório |
 |---|---|
-| **Link do item** | Deixar em branco — não há item externo a linkar |
-| **Descrição do link do item** | Deixar em branco |
-| **Parâmetros avançados** | Manter padrões: **Habilitar notificações = Sim**, **Habilitar reatribuição = Sim** |
+| **Link do*item** | Deixar em branco — não há*item externo a linkar |
+| **Descri*ão do link do item** | Deixar em b*anco |
+| **Parâmetros avançados** * Manter padrões: **Habilitar notif*cações = Sim**, **Habil*tar reatribuição = Sim** |
 
 ---
 
-### ✅ Checkpoint 2
+#*# ✅ Checkpoint 2
 
-O fluxo deve estar nesta ordem:
+O fluxo deve est*r nesta ordem:
 ```
-Quando um agente chama o fluxo
-  (6 entradas: RequesterName, ApproverEmail,
-   StartDate, EndDate, Days, Details)
-  Modo Expresso / Async: desligado
+When an agent c*lls the flow
+  (6 entradas: Reques*erName, ApproverEmail,
+   StartDat*,*EndDate, Days, Details)
         ↓
-Respond to the agent
-  (saída: Resultado)
+*espond to the agent
+  (saída: Resu*tado)
         ↓
-Iniciar e aguardar uma aprovação
-  Tipo: Aprovar/Rejeitar – Primeiro a responder
-  Título: Aprovação de ferias
-  Atribuído a: [pessoa fixa escolhida]
-  Detalhes: resumo com chips inseridos via raio (⚡)
+Iniciar e aguardar*uma aprovação
+  Tipo: Aprovar/Reje*tar – Primeiro a responder
+  Títul*: Aprovação de*ferias
+  Atribuído a: [pessoa fixa*escolhida]
+  Detalhes: resumo com *hips inseridos via raio (⚡)
 ```
 
----
+-*-
 
 ### 6. Publicar o fluxo
 
-- Confirme que o **Modo Expresso / resposta assíncrona** está **desligado** (ver aviso na seção 1).
-- Clique em:
-  ✅ **Publicar** (canto superior direito)
-- Uma janela confirma:
-```
-O seu fluxo de agente foi publicado com êxito!
-```
-- Clique em **Voltar ao agente**.
+- Cliq*e em ***� Salvar** (topo direito) para gar*ntir o rascunho gravado.
+- Clique *m:
+  ✅ **Publicar** (canto superio* direito)
+- Aguarde a confirmação *e publicação.
+- Vol*e ao editor do agente (breadcrumb **"Holiday Assist Moderno"** no top* esquerdo, ou feche o*designer).
 
-Isso fecha o designer e retorna ao editor do **Holiday Assist Moderno**. O fluxo **Enviar Aprovacao Ferias Moderno** agora existe e está pronto para ser **conectado como ferramenta** — o que fazemos no Passo 3.
+O fluxo **Enviar Aprov*cao Ferias Moderno** agora existe * está pronto para ser **conectado * mapeado como ferramenta** — o que*fazemos no Passo 3.
 
-✅ **Diferente do Clássico, aqui o fluxo ainda NÃO está mapeado ao agente.** No Clássico, ao voltar do fluxo, o tópico já trazia o nó de ação com as entradas. No moderno, o mapeamento das entradas (IA generativa vs. `System.User.DisplayName`) é feito **no Passo 3**, ao configurar a ferramenta.
+✅ ***iferente do Clássico, aqui o fluxo*ainda NÃO está mapeado ao agente.** No moderno, o mapeamento das entr*das (IA generativa vs. `System.Use*.DisplayName`) é feito ***o Passo 3**, ao configurar a ferra*enta.
 
 ---
 
-### 🔜 Melhoria futura (opcional)
+### 🔜 Melhoria futura*(opcional)
 
-O que está publicado agora **registra o pedido e envia para aprovação**, mas ainda não trata o resultado (aprovado/recusado) nem notifica quem pediu. Pode ser adicionado depois, sem quebrar o que já funciona:
+O que está publicado a*ora **registra o pedido e envia pa*a aprovação**, mas ainda não tr*ta o resultado (aprovado/recusado)*nem notifica quem pediu. Pode ser *dicionado depois, sem quebrar o qu* já funciona:
 
-- Adicionar a entrada **RequesterEmail** ao gatilho.
-- Nó de **Condição** comparando o resultado da aprovação.
-- Notificação ao solicitante (RequesterEmail) com o resultado.
+- Adicionar a entra*a***RequesterEmail** ao gatilho.
+- N* **If/Else** comparando o resultad* da aprovação.
+- Notificação ao so*icitante (RequesterEmail) com o re*ultado.
 
-É só editar o fluxo publicado e publicar de novo — sem refazer nada.
+É só editar o fluxo*publicado e publicar de novo — sem*refazer nada.
 
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1 (Moderno-Passo-1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+**Navegação:** Pass* 2 de 3 · ⬅️ Voltar ao Passo 1 (Mo*erno-Passo-1.md) · Próximo*→ Passo 3: Conectar e testar (Mode*no-Passo-3.md)
