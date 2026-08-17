@@ -135,9 +135,14 @@ Pedido de ferias registrado com sucesso e enviado para aprovacao. Voce sera noti
 
 ---
 
-### 5. Configurar o nó "Iniciar e aguardar uma aprovação"
+### 5. Adicionar e configurar o nó "Iniciar e aguardar uma aprovação"
 
-Clique no nó "Iniciar e aguardar uma aprovação de..." (badge "Precisa ser configurado") e preencha o painel Configurar da direita, de cima para baixo:
+Depois do Respond to the agent, clique no ➕ abaixo do nó (ou use o painel "Adicionar" à esquerda → Conector) e busque por aprovação.
+Selecione a ação: Iniciar e aguardar uma aprovação.
+
+🔧 Este é o nó correto. Outros conectores parecidos (como "Criar uma aprovação") não bloqueiam a execução e não servem aqui — precisamos que o fluxo espere a resposta, que é o que "Iniciar e aguardar uma aprovação" faz.
+
+Clique no nó (ele mostra o badge "Precisa ser configurado") e preencha o painel Configurar da direita, de cima para baixo.
 
 #### 5.1 Título (obrigatório)
 ```
@@ -145,20 +150,40 @@ Aprovação de ferias
 ```
 
 #### 5.2 Texto sugerido (obrigatório)
-Este campo é o texto que aparece para o aprovador. Preencha:
+É o texto que aparece para o aprovador decidir. Preencha:
 ```
 Aprovar ou rejeitar esta solicitação de férias.
 ```
 
 #### 5.3 Atribuído a (obrigatório)
-Insira o nome ou o e-mail da pessoa que vai aprovar.
-- Se está testando sozinho, coloque o SEU próprio e-mail — assim o card chega na sua caixa.
+Insira o nome ou e-mail da pessoa que vai aprovar e selecione-a na lista.
+
+- Se está testando sozinho, coloque VOCÊ MESMO — assim o card chega na sua caixa.
 - Deve ser alguém do mesmo tenant.
 
-⚠️ Se apontar para outra pessoa, o card chega na caixa dela, não na sua. O fluxo roda mesmo assim — confira em Power Automate → Meus fluxos → Histórico de execuções antes de achar que falhou.
+⚠️ Se apontar para outra pessoa, o card chega na caixa dela, não na sua. O fluxo roda mesmo assim — confira em Power Automate → Meus fluxos → Enviar Aprovacao Ferias Moderno → Histórico de execuções antes de achar que falhou.
 
-#### 5.4 Detalhes (opcional, aceita Markdown)
-Monte o resumo do pedido. Digite o rótulo, depois clique no ícone de raio à direita do campo para inserir cada entrada como chip:
+#### 5.4 Detalhes — inserir as variáveis pelo raio (passo a passo)
+O campo Detalhes aceita Markdown e é aqui que montamos o resumo do pedido. Os valores das entradas NÃO são digitados — são inseridos como "chips" (etiquetas azuis) pelo ícone de raio.
+
+Como inserir cada variável:
+
+1. Clique dentro do campo Detalhes.
+2. Digite o rótulo fixo em texto normal, por exemplo: `Solicitante:` (com o espaço depois dos dois-pontos).
+3. No canto superior direito do campo, aparecem três ícones. Clique no ícone de RAIO (⚡) — ele abre o painel "Inserir conteúdo dinâmico" / lista de variáveis.
+4. Na lista, localize e clique na entrada desejada (ex.: RequesterName). Ela é inserida no campo como um chip azul (ex.: uma etiqueta escrita "RequesterName" com um "x" para remover).
+5. Pressione Enter para pular para a próxima linha.
+6. Repita os passos 2 a 5 para cada linha do resumo, usando o rótulo e a variável correspondente da tabela abaixo.
+
+| Linha | Rótulo (digite) | Variável a inserir pelo raio (⚡) |
+|---|---|---|
+| 1 | Solicitante: | RequesterName |
+| 2 | Periodo: | StartDate  ... depois digite " e " ... depois EndDate |
+| 3 | Dias: | Days |
+| 4 | Observacao: | Details |
+
+Ao final, o campo Detalhes deve ficar com esta aparência (cada nome é um chip azul, não texto digitado):
+
 ```
 Solicitante: [RequesterName]
 Periodo: [StartDate] e [EndDate]
@@ -166,25 +191,31 @@ Dias: [Days]
 Observacao: [Details]
 ```
 
+💡 Na linha "Periodo", insira o primeiro chip (StartDate), depois digite " e " em texto normal e só então insira o segundo chip (EndDate) pelo raio.
+💡 Se quiser os rótulos em negrito no card, envolva o rótulo com dois asteriscos ao digitar (ex.: dois-asteriscos, Solicitante:, dois-asteriscos). É opcional.
+⚠️ Não digite o nome da variável como texto (ex.: RequesterName solto). Só o chip inserido pelo raio traz o valor real — texto digitado sai literal no card.
+
 #### 5.5 Campos que ficam em branco
 - Link do Item: deixar vazio.
 - Descrição do Link do Item: deixar vazio.
 
 #### 5.6 Parâmetros avançados
-- O painel mostra "Showing 2 of 6". Clique em "Mostrar tudo" para ver os 6 parâmetros.
-- Confirme que estão como padrão:
-  - Habilitar notificações: true
-  - Habilitar reatribuição: true
-- Procure entre eles um campo de TIPO DE APROVAÇÃO (ex.: "Aprovar/Rejeitar – Primeiro a responder"). Se existir, selecione essa opção. Se NÃO aparecer, o conector já usa o modo aprovar/rejeitar padrão — pode seguir.
+O painel mostra "Showing 2 of 6". Clique em "Mostrar tudo" para exibir os 6 parâmetros: Solicitante, Habilitar notificações, Habilitar reatribuição, Anexos, PartnerMetadata e ID do Parceiro.
+
+- Habilitar notificações: true (manter)
+- Habilitar reatribuição: true (manter)
+- Solicitante, Anexos, PartnerMetadata, ID do Parceiro: deixar em branco (não usados neste laboratório)
+
+ℹ️ Este conector NÃO tem um campo "Tipo de aprovação" — ele já opera no modo aprovar/rejeitar por padrão. Não é preciso configurar nada além dos campos acima.
 
 #### 5.7 Sobre o aviso de conexão
-Se aparecer "A configuração da conexão não está disponível neste ambiente", siga normalmente — isso costuma se resolver ao publicar. Após publicar, se o nó ainda acusar erro de conexão, abra o nó e confirme/refaça a conexão do conector de Aprovações.
+Se aparecer "A configuração da conexão não está disponível neste ambiente", siga normalmente — costuma se resolver ao publicar. Após publicar, se o nó ainda acusar erro de conexão, abra o nó e confirme/refaça a conexão do conector de Aprovações.
 
 ---
 
 ### ✅ Checkpoint 2
 
-O fluxo deve estar nesta ordem:
+O fluxo deve estar nesta ordem, sem o badge "Precisa ser configurado" e sem os "problemas detectados" no topo:
 
 ```
 When an agent calls the flow
@@ -197,10 +228,10 @@ Respond to the agent
         |
         v
 Iniciar e aguardar uma aprovação
-  Tipo: Aprovar/Rejeitar – Primeiro a responder
   Título: Aprovação de ferias
-  Atribuído a: [pessoa fixa escolhida]
-  Detalhes: resumo com chips inseridos via raio
+  Texto sugerido: preenchido
+  Atribuído a: [você mesmo ou pessoa fixa]
+  Detalhes: resumo com 5 chips inseridos via raio
 ```
 
 ---
