@@ -2,7 +2,7 @@
 
 > 🎯 **Objetivo desta etapa:** criar o agente Holiday Assist no Microsoft Copilot Studio e deixar todas as configurações iniciais prontas antes da criação do tópico.
 
-> **Navegação:** Passo 1 de 3 · [Próximo → Passo 2: Criação do tópico](PASSO-2-TOPICO.md)
+> **Navegação:** Passo 1 de 3 · [Etapa 1.1: Conhecimento](Classico-PASSO-1.1-AGENTE-Conhecimento.md) · [Próximo → Passo 2: Criação do tópico](Classico-PASSO-2-TOPICO.md)
 
 ---
 
@@ -131,6 +131,12 @@ Se ocorrer erro no fluxo ou ausência de resposta da aprovação, informe que n�
 
 > ℹ️ Pode aparecer **1 Warning** em **Agent status**. É normal nesta fase — clique em **Review** para ver o alerta; ele costuma se resolver após publicar o agente.
 
+### 3.6 Conhecimento
+
+Adicione o documento de **Política de Férias — Contoso** como fonte de conhecimento do agente.
+
+👉 Esta etapa é detalhada em: [**Passo 1.1 — Adicionar Conhecimento**](Classico-PASSO-1.1-AGENTE-Conhecimento.md)
+
 ---
 
 ## 4. Demais itens da Visão geral
@@ -139,7 +145,7 @@ Estes itens aparecem mais abaixo na mesma tela. **Nenhum deles exige configuraç
 
 | Item | Estado esperado | Ação |
 |---|---|---|
-| **Conhecimento** | vazio | Não adicionar fontes |
+| **Conhecimento** | documento de política | Adicionar conforme o [Passo 1.1](Classico-PASSO-1.1-AGENTE-Conhecimento.md) |
 | **Pesquisa na Web** | Desabilitado(a) | Manter desabilitado |
 | **Ferramentas** | vazio | Não adicionar (o Power Automate entra no Passo 3) |
 | **Work IQ** | Habilitado | Ver observação abaixo |
@@ -230,7 +236,7 @@ Agente: Holiday Assist
 ├── Instruções ...................... preenchidas
 │
 ├── Visão geral
-│   ├── Conhecimento ................. vazio
+│   ├── Conhecimento ................. Politica_de_Ferias_Contoso.docx
 │   ├── Pesquisa na Web .............. Desabilitado
 │   ├── Ferramentas .................. vazio
 │   ├── Work IQ ...................... Habilitado (ou desabilitado, ver nota)
@@ -259,4 +265,4 @@ Agente: Holiday Assist
 
 ---
 
-> **Navegação:** Passo 1 de 3 · [Próximo → Passo 2: Criação do tópico](PASSO-2-TOPICO.md)
+> **Navegação:** Passo 1 de 3 · [Etapa 1.1: Conhecimento](Classico-PASSO-1.1-AGENTE-Conhecimento.md) · [Próximo → Passo 2: Criação do tópico](Classico-PASSO-2-TOPICO.md)
