@@ -98,48 +98,42 @@ Repita esse processo para criar **cinco** nós de pergunta, um para cada dado. P
 
 | # | Pergunta (caixa de mensagem) | Identificar | Nome da variável |
 |---|---|---|---|
-| 1 | `Qual a data de início das suas férias?` | **Data** *(confirmado — "Datas, dias da semana e meses em relação a um ponto no tempo extraídos como uma cadeia de caracteres")* | `DataInicio` (tipo `date`) |
-| 2 | `Qual a data de término das suas férias?` | **Data** | `DataFim` (tipo `date`) |
-| 3 | `Quantos dias você está solicitando?` | Número | `QtdDias` |
-| 4 | `Qual o e-mail do aprovador?` | E-mail *(ou Texto, se essa opção não existir no seu ambiente — ainda não confirmado por print)* | `EmailAprovador` |
-| 5 | `Deseja adicionar alguma observação? Se não quiser, pode responder "não".` | **Resposta inteira do usuário** *(confirmado — "Nenhuma extração de entidade; salvo como está")* | `Observacao` |
+| 1 | `Qual a data de início das suas férias? (formato DD/MM/AAAA)` | **Resposta inteira do usuário** | `DataInicio` (tipo `string`) |
+| 2 | `Qual a data de término das suas férias? (formato DD/MM/AAAA)` | **Resposta inteira do usuário** | `DataFim` (tipo `string`) |
+| 3 | `Quantos dias você está solicitando?` | **Resposta inteira do usuário** | `QtdDias` (tipo `string`) |
+| 4 | `Qual o e-mail do aprovador?` | E-mail *(confirmado indiretamente — o mapeamento no Passo 3 funcionou sem erro de tipo)* | `EmailAprovador` (tipo `string`) |
+| 5 | `Deseja adicionar alguma observação? Se não quiser, pode responder "não".` | **Resposta inteira do usuário** | `Observacao` (tipo `string`) |
 
-> ✅ **Tipo `Resposta inteira do usuário` confirmado** para a observação. Diferente das demais perguntas, aqui não há extração de entidade — o texto digitado pelo colaborador é salvo exatamente como foi escrito.
-
-> ✅ **Tipo `Data` confirmado.** No seletor **Escolher as informações a serem identificadas**, use a opção **Data** (não "Data e hora" nem "Data e hora sem fuso horário"). Ela extrai a data da resposta do usuário como referência temporal, e a variável salva fica com o tipo `date`.
-
-> ⚠️ **Confira os demais tipos no seu ambiente** — **Data** e **Resposta inteira do usuário** foram validados por print nesta etapa. Os nomes exatos das entidades de **Número** e **E-mail** ainda podem variar de tenant para tenant.
+> 🔧 **Correção — todas as respostas de texto livre usam `Resposta inteira do usuário`.** As perguntas 1, 2 e 3 usavam originalmente os tipos **Data** e **Número**, que produzem variáveis do tipo `date` e `number`. Ao mapear essas variáveis como entrada do agent flow no Passo 3 (que espera todos os campos como **Texto**), isso gerou o erro:
+>
+> ```text
+> Input variável 'StartDate' é do tipo incorreto: Date
+> Input variável 'EndDate' é do tipo incorreto: Date
+> Input variável 'Days' é do tipo incorreto: Number
+> ```
+>
+> A correção é usar **Resposta inteira do usuário** em todas as perguntas de texto livre — assim, toda variável do tópico fica como `string`, igual ao tipo esperado pelo fluxo, e o erro desaparece.
 
 > 💡 A pergunta 5 é **opcional** conforme as instruções do agente. Se seu ambiente permitir marcar a pergunta como não obrigatória, use esse recurso; caso contrário, oriente o colaborador a responder "não" ou "sem observação" no próprio texto da pergunta, como no exemplo acima.
 
-### 5.1 Verificar se as datas estão sendo preenchidas
+### 5.1 Sobre o texto livre nas datas e na quantidade de dias
 
-O tipo **Data** extrai a informação a partir de texto livre — por isso, antes de seguir, **confirme que a variável realmente recebe um valor** quando o colaborador responde.
+Como `DataInicio`, `DataFim` e `QtdDias` agora usam **Resposta inteira do usuário**, não há extração automática — a variável salva **exatamente o que o colaborador digitar**, sem validar se é uma data ou um número.
+
+Por isso, o texto da pergunta precisa deixar o formato esperado bem claro (já incluído nas perguntas 1 e 2 acima: `formato DD/MM/AAAA`). Mesmo assim, teste antes de seguir:
 
 1. Salve o tópico.
 2. Abra o painel de **Teste** (lateral direita).
-3. Digite uma mensagem simulando o início da conversa, por exemplo:
+3. Digite uma mensagem simulando o início da conversa:
 
    ```text
    quero pedir ferias
    ```
 
-4. Quando o agente perguntar a data de início, responda com uma data em formato claro:
+4. Responda às perguntas de data com um valor no formato pedido, por exemplo `10/09/2026`.
+5. Abra o ícone **Variáveis** e confira se `DataInicio`, `DataFim` e `QtdDias` aparecem preenchidas com o texto exato que você digitou.
 
-   ```text
-   10/09/2026
-   ```
-
-5. Abra o ícone **Variáveis** (topo do editor de tópico, ao lado de Comentários) e confira se `DataInicio` aparece **preenchida** — não vazia e não em branco.
-6. Repita para `DataFim`.
-
-**Se a variável ficar vazia:**
-
-- Confirme que o tipo **Data** foi realmente selecionado no nó (não "Data e hora" nem outro tipo).
-- Teste respostas mais explícitas primeiro (`10/09/2026`) antes de testar frases livres (`dia 10 do mês que vem`) — respostas em formato de data completo têm reconhecimento mais confiável.
-- Se mesmo assim a variável não preencher, verifique se há um **prompt de reprompt** configurado (mensagem que o agente envia quando não reconhece a resposta) e ajuste o texto da pergunta para orientar melhor o formato esperado, por exemplo incluindo `(formato DD/MM/AAAA)` na própria pergunta.
-
-> ⚠️ **Não avance para a coleta dos demais dados até confirmar que `DataInicio` e `DataFim` preenchem corretamente.** Como o colaborador é quem digita a data, uma falha silenciosa de extração aqui quebra o resto do fluxo sem gerar erro visível.
+> ⚠️ **Diferente do tipo Data, aqui não há garantia de formato.** Se o colaborador responder algo fora do padrão (`mês que vem`, `uns 10 dias`), a variável salva esse texto do jeito que veio — sem erro, mas também sem correção automática. O texto claro na pergunta é a única proteção disponível neste modelo.
 
 ---
 
@@ -151,45 +145,51 @@ Depois do último nó de pergunta, adicione um nó **Enviar uma mensagem** com o
 
 ⚠️ **Não digite o nome da variável entre chaves (ex.: `{DataFim}`) diretamente no texto.** Isso não funciona — o Copilot Studio não reconhece a variável assim e mostra o erro **"Identificador não reconhecido na expressão"** em vermelho abaixo da mensagem. A variável precisa ser **inserida pelo botão**, conforme os passos abaixo.
 
+⚠️ **Não use apenas Enter para separar os rótulos.** Um Enter simples entre linhas não vira quebra de linha de verdade no chat — o texto sai todo corrido, um atrás do outro, mesmo parecendo separado no editor. Para os cinco dados, use a **lista com marcadores**, não parágrafos soltos.
+
 1. Clique em **+ Adicionar nó** → **Enviar uma mensagem**.
-2. Na caixa de texto do nó **Mensagem**, digite a primeira linha:
+2. Na caixa de texto do nó **Mensagem**, digite a primeira linha (esta fica como texto normal, fora da lista):
 
    ```text
    Confirme os dados do seu pedido:
    ```
 
-3. Pressione **Enter** duas vezes para pular uma linha e digite o rótulo do primeiro dado, **sem o valor**:
+3. Pressione **Enter** uma vez para pular linha.
+4. Na barra de ferramentas do editor, clique no ícone de **lista com marcadores** (ao lado dos ícones B e I, o mesmo usado para tópicos com bullet). Isso inicia um item de lista.
+5. Digite o rótulo do primeiro dado, **sem o valor**:
 
    ```text
    Data de início:
    ```
 
-4. Com o cursor logo após o texto digitado, clique no ícone **{x}** (Adicionar variável) na barra de ferramentas do editor, ao lado do ícone **fx**.
-5. O painel lateral **Selecionar uma variável** abre, na aba **Personalizado**.
-6. Use o campo **Pesquisar variáveis** e digite `DataInicio`, ou localize a variável na lista (cada uma mostra seu nome, a referência `Topic.NomeDaVariavel` e o tipo, por exemplo `date` ou `string`).
-7. **Clique na variável `DataInicio`** para inseri-la. Ela aparece na mensagem como um "chip" cinza com o ícone **fx**, e não mais como texto solto.
-8. Pressione **Enter** para pular linha e repita o processo (passos 3 a 7) para os quatro dados restantes:
+6. Com o cursor logo após o texto digitado, clique no ícone **{x}** (Adicionar variável) na barra de ferramentas, ao lado do ícone **fx**.
+7. O painel lateral **Selecionar uma variável** abre, na aba **Personalizado**.
+8. Use o campo **Pesquisar variáveis** e digite `DataInicio`, ou localize a variável na lista (cada uma mostra seu nome, a referência `Topic.NomeDaVariavel` e o tipo).
+9. **Clique na variável `DataInicio`** para inseri-la. Ela aparece na mensagem como um "chip" cinza com o ícone **fx**, e não mais como texto solto.
+10. Pressione **Enter** — como você está dentro da lista com marcadores, isso cria automaticamente o **próximo item da lista**, já no formato correto. Repita os passos 5 a 9 para os quatro dados restantes:
 
-   | Rótulo a digitar | Variável a inserir pelo painel |
-   |---|---|
-   | `Data de término:` | `DataFim` |
-   | `Quantidade de dias:` | `QtdDias` |
-   | `Aprovador:` | `EmailAprovador` |
-   | `Observação:` | `Observacao` |
+    | Rótulo a digitar | Variável a inserir pelo painel |
+    |---|---|
+    | `Data de término:` | `DataFim` |
+    | `Quantidade de dias:` | `QtdDias` |
+    | `Aprovador:` | `EmailAprovador` |
+    | `Observação:` | `Observacao` |
 
-Ao final, a mensagem deve ter esta aparência (os nomes em destaque são os chips inseridos pelo painel, não texto digitado):
+Ao final, a mensagem deve ter esta aparência — a primeira linha como texto normal, e os cinco dados como itens de uma **lista com marcadores**, cada um em sua própria linha (os nomes em destaque são os chips inseridos pelo painel, não texto digitado):
 
 ```text
 Confirme os dados do seu pedido:
 
-Data de início: [fx DataInicio]
-Data de término: [fx DataFim]
-Quantidade de dias: [fx QtdDias]
-Aprovador: [fx EmailAprovador]
-Observação: [fx Observacao]
+• Data de início: [fx DataInicio]
+• Data de término: [fx DataFim]
+• Quantidade de dias: [fx QtdDias]
+• Aprovador: [fx EmailAprovador]
+• Observação: [fx Observacao]
 ```
 
-> ✅ **Checkpoint:** não deve aparecer nenhuma mensagem em vermelho do tipo "Identificador não reconhecido na expressão" abaixo do nó. Se aparecer, alguma variável ainda está como texto digitado — apague o trecho e insira novamente pelo botão **{x}**.
+> ✅ **Checkpoint:** teste no painel de Teste e confira se cada dado aparece em **sua própria linha** no chat — não tudo corrido num só parágrafo. Se sair corrido, confirme que você usou o ícone de lista com marcadores antes de digitar os rótulos, não apenas Enter.
+
+> ✅ Também não deve aparecer nenhuma mensagem em vermelho do tipo "Identificador não reconhecido na expressão" abaixo do nó. Se aparecer, alguma variável ainda está como texto digitado — apague o trecho e insira novamente pelo botão **{x}**.
 
 ### 6.2 Adicionar a pergunta de confirmação
 
@@ -317,7 +317,65 @@ Se você quiser o pedido realmente enviado para aprovação, não é necessário
 
 A partir daqui, a construção do fluxo continua no:
 
-👉 [**Passo 3 — Criação do Fluxo**](Classico-PASSO-3-FLUXO.md) *(vamos construir agora)*
+👉 [**Passo 3 — Criação do Fluxo**](Classico-PASSO-3-FLUXO.md)
+
+---
+
+## 8. Mapear as entradas do fluxo (ao voltar do Passo 3)
+
+Depois de publicar o fluxo e clicar em **Voltar ao agente** (último passo do [Passo 3](Classico-PASSO-3-FLUXO.md)), o tópico volta a este editor com um novo nó **Ação** (ícone verde ⚡), logo abaixo da mensagem "Solicitação realizada com sucesso" — no lugar de onde você clicou em "Novo fluxo de agente".
+
+> ℹ️ Este nó representa a chamada ao flow **Enviar Aprovacao de Ferias**. Ele mostra **"Entradas do Power Automate (6)"** — todas em vermelho e vazias (`Selecionar ou inserir um valor`) até serem preenchidas.
+
+### 8.1 Preencher cada entrada
+
+Para cada entrada, clique na caixa **"Selecionar ou inserir um valor"**. Um painel **Selecionar uma variável** abre à direita, com as abas **Personalizado**, **Sistema** e **Ambiente**.
+
+| Entrada do fluxo | Aba a usar | Selecionar |
+|---|---|---|
+| `RequesterName (String)` | **Sistema** | `User.Email` |
+| `ApproverEmail (String)` | Personalizado | `EmailAprovador` |
+| `StartDate (String)` | Personalizado | `DataInicio` |
+| `EndDate (String)` | Personalizado | `DataFim` |
+| `Days (String)` | Personalizado | `QtdDias` |
+| `Details (String)` | Personalizado | `Observacao` |
+
+> ℹ️ **`RequesterName` usa a aba Sistema, não Personalizado.** As outras cinco entradas já aparecem prontas na aba Personalizado, porque são variáveis criadas neste próprio tópico.
+
+> 💡 **Neste laboratório, `RequesterName` recebe o e-mail do usuário logado (`User.Email`), não o nome de exibição.** É uma escolha deliberada para simplificar — o campo guarda um e-mail, apesar do nome. Se preferir usar o nome de exibição real, selecione `User.DisplayName` no lugar.
+
+### 8.2 Se aparecer erro de tipo
+
+Se alguma entrada mostrar borda vermelha com uma mensagem como:
+
+```text
+Input variável 'StartDate' é do tipo incorreto: Date
+Input variável 'EndDate' é do tipo incorreto: Date
+Input variável 'Days' é do tipo incorreto: Number
+```
+
+A causa é a variável do tópico estar com tipo `date` ou `number`, enquanto o fluxo espera **Texto** em todos os campos.
+
+**Correção:** volte à seção 5 deste documento e confirme que `DataInicio`, `DataFim` e `QtdDias` estão configuradas com **Resposta inteira do usuário** (não Data nem Número) — essa mudança já está refletida na tabela da seção 5. Depois de ajustar, salve o tópico novamente; o erro desaparece porque a variável passa a ser `string`, igual ao tipo esperado pelo fluxo.
+
+### 8.3 Saída disponível
+
+Abaixo das entradas, o nó mostra:
+
+```text
+Saídas (1)
+resultado (string) = Resultado (string)
+```
+
+Esta é a mensagem de confirmação vinda do `Respond to the agent` do fluxo (Passo 3, seção 4). Não é usada em nenhuma mensagem deste tópico ainda — fica disponível para uso futuro, se você quiser substituir o texto fixo "Solicitação realizada com sucesso" por esta saída dinâmica.
+
+---
+
+## ✅ Checkpoint — mapeamento concluído
+
+1. Salve o tópico.
+2. Confirme que **não há mais bordas vermelhas** no nó Ação.
+3. Publique o agente (aba Overview → Publish), se ainda não publicou.
 
 ---
 
@@ -329,27 +387,34 @@ Tópico: Solicitar Ferias
 ├── Gatilho
 │   └── O agente escolhe (descrição preenchida)
 │
-├── Perguntas
-│   ├── DataInicio (tipo Data — preenchimento verificado)
-│   ├── DataFim (tipo Data — preenchimento verificado)
-│   ├── QtdDias
-│   ├── EmailAprovador
-│   └── Observacao
+├── Perguntas (todas tipo "Resposta inteira do usuário", exceto EmailAprovador)
+│   ├── DataInicio (string)
+│   ├── DataFim (string)
+│   ├── QtdDias (string)
+│   ├── EmailAprovador (string, tipo E-mail)
+│   └── Observacao (string)
 │
 ├── Mensagem de resumo (variáveis inseridas via {x}, não digitadas)
 ├── Pergunta de confirmação → Confirmacao (tipo choice: Sim/Não)
 │
 ├── Condição: Confirmacao é igual a Não
 │   ├── Não                → Ir para etapa (volta à pergunta "Data de início")
-│   └── Todas as outras    → Mensagem "Solicitação realizada com sucesso" (Final B)
-│                             └── (opcional) Adicionar ferramenta → Novo fluxo de agente → Passo 3
+│   └── Todas as outras    → Mensagem "Solicitação realizada com sucesso"
+│                             └── Ação (chama o fluxo Enviar Aprovacao de Ferias)
+│                                   ├── RequesterName  = User.Email (Sistema)
+│                                   ├── ApproverEmail  = EmailAprovador
+│                                   ├── StartDate      = DataInicio
+│                                   ├── EndDate        = DataFim
+│                                   ├── Days           = QtdDias
+│                                   ├── Details        = Observacao
+│                                   └── Saída: resultado (não usada ainda)
 │
-└── Salvo
+└── Salvo, sem erros, publicado
 ```
 
 ---
 
-> ✅ **Resultado esperado:** tópico "Solicitar Ferias" criado, coletando os cinco dados, confirmando com o colaborador, voltando ao início em caso de "Não" e encerrando com a mensagem "Solicitação realizada com sucesso" em caso de "Sim". Pronto para evoluir para o Final A no Passo 3.
+> ✅ **Resultado esperado:** tópico "Solicitar Ferias" criado, coletando os dados, confirmando com o colaborador, voltando ao início em caso de "Não" e, em caso de "Sim", encerrando com a mensagem "Solicitação realizada com sucesso" e chamando o fluxo de aprovação com todas as entradas mapeadas corretamente, sem erro de tipo.
 
 ---
 
