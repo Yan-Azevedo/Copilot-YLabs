@@ -1,4 +1,4 @@
-# 🤖 Passo 1 — Criação e Configuração Inicial do Agente
+# 🤖 Passo 1 — Criação e Configuração Inicial do Agente - Classico
 
 > 🎯 **Objetivo desta etapa:** criar o agente Holiday Assist no Microsoft Copilot Studio e deixar todas as configurações iniciais prontas antes da criação do tópico.
 
