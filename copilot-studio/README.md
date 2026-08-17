@@ -3,10 +3,10 @@
 > Treinamento prático de criação de um agente de solicitação de férias no **Microsoft Copilot Studio**.
 
 <p align="center">
-  <img src="../assets/Logo-YLabs.png" alt="Copilot YLabs — laboratórios práticos de agentes de IA" width="100%"/>
+  ../assets/Logo-YLabs.pngboratórios práticos de agentes de IA" width="100%"/>
 </p>
 
-**Apresentador e área:** Yan Azevedo | Cloud Target
+**Apresentador:** Yan Azevedo | Cloud Target
 **Área:** Inovação, adoção e treinamento prático em soluções com Microsoft 365 e Copilot Studio.
 
 ---
@@ -71,7 +71,37 @@ A solução é adequada para ambiente de treinamento prático, pois possui escop
 
 ## 🧭 Guias de construção
 
-- [MODELO-1-CLASSICO.md](MODELO-1-CLASSICO.md)
-- [MODELO-2-COM-TOPICO.md](MODELO-2-COM-TOPICO.md)
-- [MODELO-3-SEM-TOPICO.md](MODELO-3-SEM-TOPICO.md)
-- [EVOLUCAO.md](EVOLUCAO.md) — camadas de evolução do agente
+O mesmo caso é construído de **duas formas**, para você comparar a experiência clássica com a moderna do Copilot Studio:
+
+| Caminho | Experiência | Como conduz a conversa | Guia |
+|---|---|---|---|
+| 🕰️ **Clássico** | Copilot Studio clássico | Tópico com nós de pergunta (passo a passo fixo) | Copilot-Studio-Classico/ |
+| ⚡ **Moderno** | Copilot Studio (New experience) | Orquestração generativa, **sem tópico** | [CopilotStudio-Moderno/ |
+
+### 🕰️ Caminho Clássico
+1. Copilot-Studio-Classico/Classico-PASSO-1-AGENTE.md
+2. Copilot-Studio-Classico/Classico-PASSO-1.1-AGENTE-Conhecimento.md
+3. [Passo 2 — Criação do Tópico](CopilotO-2-TOPICO.md
+4. Copilot-Studio-Classico/Classico-PASSO-3-FLUXO.md
+
+### ⚡ Caminho Moderno
+1. Copilot-Studio-Moderno/Moderno-Passo-1.md
+2. [Passo 2 — Criação do Fluxo](Copilot-Studio-Moderno/Moderno-Passo-2/Moderno-Passo-3.md
+
+---
+
+## 🏁 Clássico × Moderno
+
+| Aspecto | Clássico | Moderno |
+|---|---|---|
+| Nº de arquivos | 4 (3 passos + etapa 1.1) | 3 |
+| Coleta dos dados | Tópico com 5 nós de pergunta | Instruções + orquestrador |
+| Mapeamento de entradas | Manual (variável a variável) | Por IA, guiado pela Descrição |
+| Nome do solicitante | User.Email mapeado no tópico | IA (usa o usuário logado) |
+| Peça mais trabalhosa | O tópico (documento extenso) | Deixou de existir |
+
+---
+
+## 📈 Evolução do agente
+
+Quer levar o agente além da versão base (esqueleto → rastreável → inteligente)? Veja as camadas de evolução em [EVOLUCAO.md](EVOLUCAO.md).
