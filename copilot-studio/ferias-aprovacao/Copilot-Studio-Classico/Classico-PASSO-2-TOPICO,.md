@@ -218,9 +218,9 @@ Confirmacao
 
 ---
 
-### 6.3 Adicionar a condição
+### 6.3 Adicionar a condição (Geralmente aparece sozinho as condições, caso não crie desta forma)
 
-O nó de pergunta com **Opções de múltipla escolha** não ramifica sozinho — é preciso adicionar um nó de **Condição** logo abaixo para decidir o caminho.
+O nó de pergunta com **Opções de múltipla escolha**
 
 1. Clique no ícone **+** abaixo do nó de pergunta.
 2. Selecione **Adicionar uma condição**.
