@@ -124,7 +124,7 @@ Clique na aba **IA e comportamento**. Ela tem apenas **duas** configurações:
 | Configuração | Estado recomendado |
 |---|---|
 | **Permitir que outros agentes se conectem** | Deixe **desligado** (não precisamos que outros agentes usem este) |
-| **Nível de moderação** | **Máximo** (mais seguro para demonstração) |
+| **Nível de moderação** | **Médio** |
 
 ✅ **Não há botão de "orquestração generativa" para ativar.** No novo Copilot Studio, a **orquestração generativa já é o comportamento padrão e nativo** — é ela que faz o agente conduzir a conversa e chamar ferramentas **sem tópico**. Por isso não existe toggle: já vem ligada de fábrica.
 
