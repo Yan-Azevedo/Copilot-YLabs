@@ -19,7 +19,7 @@
 Na página **Agentes**, clique em **Novo agente**.
 A *New experience* abre **direto no editor**, já com o nome provisório **"Agente Sem Título"** — **não há** tela intermediária de nome/solução como no Clássico.
 
-📌 **Mapa da tela:** no **topo**, as abas **Criar · Visualizar · Avaliar · Monitorar**; no **centro**, o **Nome** e o campo **Instruções**; na **coluna direita**, os blocos **Modelo, Skills, Ferramentas, Conhecimento, Connected agents e Memória**. Todo o Passo 1 acontece na aba **Criar**.
+📌 **Mapa da tela:** no **topo**, as abas **Criar · Visualizar · Avaliar · Monitorar**; no **centro**, o **Nome** e o campo **Instruções**; na **coluna direita**, os blocos **Modelo, Skills, Ferramentas, Conhecimento e Connected agents**. Todo o Passo 1 acontece na aba **Criar**.
 
 ---
 
@@ -35,10 +35,11 @@ Holiday Assist Moderno
 
 ### 3. Definir o Modelo (coluna direita)
 
-No bloco **Modelo**, o padrão do tenant aparece como **Claude Opus 5**.
-- Mantenha **Claude Opus 5**, ou abra o **dropdown** e escolha outro modelo disponível se sua organização exigir.
-
-ℹ️ O modelo influencia o estilo das respostas; o **planejamento das ações** é feito pelo orquestrador generativo (confirmado na etapa 6).
+No bloco **Modelo**, escolha no dropdown:
+```
+GPT-5 Chat
+```
+ℹ️ Caso seu ambiente não ofereça essa opção, mantenha o **modelo padrão do tenant**. O modelo influencia o estilo das respostas; o **planejamento das ações** é feito pelo orquestrador generativo (nativo nesta experiência).
 
 ---
 
@@ -88,39 +89,48 @@ Politica_de_Ferias_Contoso.docx
 ℹ️ Também é possível carregar do **OneDrive**, **SharePoint** ou outras fontes (Dataverse etc.). Para este cenário, use o **upload local**.
 
 #### 5.4 Aguardar o processamento
-Após adicionar, o documento aparece com um status (ex.: *Em andamento / Processing*). Aguarde até indicar **pronto** — só então o agente passa a usar o documento.
-⚠️ **Não teste antes de o processamento concluir.** Se perguntar sobre a política enquanto o status ainda estiver "Em andamento", o agente pode dizer que não encontrou a informação — parece erro, mas é só a indexação não ter terminado.
+Após adicionar, o documento aparece como um chip no bloco **Conhecimento** (ex.: `Politica_de_Ferias_Contoso.docx`). Aguarde o processamento concluir — só então o agente passa a usar o documento.
+⚠️ **Não teste antes de o processamento concluir.** Se perguntar sobre a política enquanto ainda estiver processando, o agente pode dizer que não encontrou a informação — parece erro, mas é só a indexação não ter terminado.
 
 ---
 
 ### 6. Demais blocos da coluna direita
 
-Confira — **nenhum exige ação nesta etapa**:
+⚠️ **Não há botão a clicar aqui — é apenas conferência.** Deixe todos vazios nesta etapa:
 
 | Bloco | Estado esperado | Ação |
 |---|---|---|
 | **Skills** | vazio | Não adicionar (recurso avançado, fora do escopo) |
 | **Ferramentas** | vazio | Não adicionar agora — o fluxo entra nos Passos 2 e 3 |
 | **Connected agents** | vazio | Não adicionar |
-| **Memória (Preview)** | **Desligada** | Manter desligada neste laboratório |
 
-ℹ️ **Descrição e Solução:** não aparecem nesta tela principal; ficam no menu **⋯** (Configurações/Detalhes), no canto superior direito. São **opcionais** para o laboratório.
+ℹ️ Dependendo da versão/rollout do seu tenant, pode aparecer também um bloco **Memória (Preview)**. Se existir, deixe **desligado**; se não aparecer, ignore — não é necessário neste laboratório.
 
 ---
 
-### 7. Confirmar a Orquestração Generativa (crítico)
+### 7. Confirmar as configurações de IA (via menu ⋯)
 
-Abra o menu **⋯ → Configurações** e confirme:
+Abra o menu **⋯** (canto superior direito) → **Configurações**. A janela **Configurações do agente** tem 4 abas:
 
-| Item | Estado esperado |
+| Aba | O que contém |
 |---|---|
-| **Orquestração de IA generativa** | **Ativada** (padrão em agentes novos) |
-| **Usar informações da Web** | Desativado |
-| **Nível de moderação** | Alta |
-| **Respostas sem fundamentação** | Ativado |
-| **Carregamento de arquivos / Intérprete de código** | Desativado |
+| **Detalhes do agente** | Nome do esquema, Solução, Idioma primário — **somente leitura** (definidos na criação) |
+| **IA e comportamento** | Orquestração (conexão de agentes) e Nível de moderação |
+| **Segurança e acesso** | Autenticação e permissões |
+| **Saudação e prompts** | Saudação e prompts sugeridos |
 
-🚨 **Se a orquestração generativa estiver desligada, este modelo não funciona.** Sem tópico e sem orquestração, o agente não conduz a conversa nem chama a ferramenta. Confirme que está **Ativada** antes de seguir.
+Clique na aba **IA e comportamento**. Ela tem apenas **duas** configurações:
+
+| Configuração | Estado recomendado |
+|---|---|
+| **Permitir que outros agentes se conectem** | Deixe **desligado** (não precisamos que outros agentes usem este) |
+| **Nível de moderação** | **Máximo** (mais seguro para demonstração) |
+
+✅ **Não há botão de "orquestração generativa" para ativar.** No novo Copilot Studio, a **orquestração generativa já é o comportamento padrão e nativo** — é ela que faz o agente conduzir a conversa e chamar ferramentas **sem tópico**. Por isso não existe toggle: já vem ligada de fábrica.
+
+ℹ️ **Onde ficam os controles de conhecimento:** "Usar informações da Web" e a fundamentação **não ficam nesta aba** — são controlados no próprio bloco **Conhecimento** (etapa 5, ao remover o chip *"Pesquisar em todos os sites"*).
+
+ℹ️ **Idioma primário (aba Detalhes do agente):** pode aparecer como **"English"** e **não pode ser alterado** após a criação. Não é problema — como as **Instruções estão em português**, o agente responde em PT.
 
 ---
 
@@ -143,22 +153,20 @@ Agente: Holiday Assist Moderno   (aba: Criar)
 ├── Nome ............................ Holiday Assist Moderno
 ├── Instruções ..................... preenchidas (tom + coleta 1 a 1 + resumo + limites)
 │
-├── Modelo ......................... Claude Opus 5 (ou padrão do tenant)
+├── Modelo ......................... GPT-5 Chat (ou padrão do tenant)
 ├── Skills ......................... vazio
 ├── Ferramentas .................... vazio  (fluxo entra nos Passos 2 e 3)
 ├── Conhecimento
 │   ├── "Pesquisar em todos os sites" ... REMOVIDO ❌
-│   └── Politica_de_Ferias_Contoso.docx . adicionado ✅ (status: pronto)
+│   └── Politica_de_Ferias_Contoso.docx . adicionado ✅
 ├── Connected agents ............... vazio
-├── Memória (Preview) .............. desligada
 │
-└── Configurações (⋯)
-    ├── Orquestração generativa ..... Ativada ✅ (crítico)
-    ├── Usar informações da Web ..... Desativado
-    ├── Moderação ................... Alta
-    └── Respostas sem fundamentação . Ativado
+└── Configurações (⋯) → IA e comportamento
+    ├── Orquestração generativa ..... nativa (sem toggle) ✅
+    ├── Permitir outros agentes ..... desligado
+    └── Nível de moderação .......... Máximo
 ```
 
-✅ **Resultado esperado:** agente **Holiday Assist Moderno** criado no novo Studio, com nome, modelo, instruções, conhecimento da política ativo (web desligada) e orquestração generativa confirmada — **sem nenhum tópico**. Pronto para receber a ferramenta de aprovação nos próximos passos.
+✅ **Resultado esperado:** agente **Holiday Assist Moderno** criado no novo Studio, com nome, modelo, instruções, conhecimento da política ativo (web desligada) e orquestração generativa nativa — **sem nenhum tópico**. Pronto para receber a ferramenta de aprovação nos próximos passos.
 
 **Navegação:** Passo 1 de 3 · Próximo → Passo 2: Criação do fluxo (Moderno-Passo-2.md)

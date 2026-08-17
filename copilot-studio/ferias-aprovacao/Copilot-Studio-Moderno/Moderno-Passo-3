@@ -1,240 +1,166 @@
-## ⚙️ Passo 2 — Criação do Fluxo (Agent Flow) — Experiência Moderna
+## 🔗 Passo 3 — Conectar a Ferramenta, Mapear Entradas e Testar (Experiência Moderna)
 
-🎯 **Objetivo desta etapa:** construir o fluxo que recebe os dados coletados pelo agente, confirma o recebimento e envia o pedido para aprovação de forma **assíncrona** — criado **direto do bloco Ferramentas**, sem passar por nenhum tópico.
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1.1 (Moderno-Passo-1.1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+🎯 **Objetivo desta etapa:** conectar o fluxo **Enviar Aprovacao Ferias Moderno** ao agente como ferramenta, mapear as entradas (IA generativa vs. valor fixo), refinar a descrição da ferramenta e **testar a orquestração ponta a ponta** — fechando o laboratório sem nenhum tópico.
+**Navegação:** Passo 3 de 3 · ⬅️ Voltar ao Passo 2 (Moderno-Passo-2.md)
 
-> 🆕 **Diferença central para o Clássico:** no Clássico, o fluxo era criado **de dentro do tópico** (nó "Novo fluxo de agente"). Aqui **não há tópico** — o fluxo é criado a partir do bloco **Ferramentas** do próprio agente. O designer do fluxo, porém, é o **mesmo**.
-
----
-
-### ✅ Status deste documento
-
-Este passo cobre a construção completa do fluxo até a **publicação** — versão funcional mínima (registra o pedido e envia para aprovação). A conexão do fluxo como ferramenta e o mapeamento das entradas (IA generativa vs. valor fixo) acontecem no **Passo 3**. A condição de resultado e a notificação ao solicitante ficam como melhoria futura, descrita ao final.
-
----
-
-### ⚙️ Decisões tomadas para este fluxo
-
-| Decisão | Escolha |
-|---|---|
-| Posição da aprovação | **Depois** do *Respond to the agent* (assíncrono — sem risco de timeout) |
-| Campo "Atribuído a" | **Fixo**, uma pessoa específica (para efeito de treinamento) |
-| Quem pode ser o aprovador | Você mesmo (o criador) **ou** um colega ao lado — desde que no mesmo tenant |
-
-ℹ️ **Por que assíncrono:** um agent flow chamado por um agente tem limite de **100 segundos** para responder. Como a aprovação espera uma pessoa clicar — o que pode levar minutos —, ela precisa vir **depois** do *Respond to the agent*, nunca antes.
+> 🆕 **Este passo substitui todo o "Passo 2 — Tópico" do Clássico.** No Clássico, era preciso um tópico inteiro (nós de pergunta, variáveis, condição, mapeamento manual). Aqui, o mesmo resultado vem de **3 coisas**: uma **boa descrição da ferramenta**, o **mapeamento das entradas** e as **instruções do agente** (Passo 1). O orquestrador faz o resto.
 
 ---
 
 ### ✅ Pré-requisitos
 
-- Agente **Holiday Assist Moderno** criado e configurado (ver Moderno-Passo-1.md).
-- Conhecimento adicionado (ver Moderno-Passo-1.1.md).
-- Orquestração generativa **Ativada** (confirmado no Passo 1, seção 7).
+- Agente **Holiday Assist Moderno** criado, com instruções e conhecimento (ver Moderno-Passo-1.md).
+- Fluxo **Enviar Aprovacao Ferias Moderno** publicado (ver Moderno-Passo-2.md).
+- Você clicou em **Voltar ao agente** ao final do Passo 2 e está de volta ao editor do agente, aba **Criar**.
 
 ---
 
-### 1. Abrir o designer do fluxo (a partir de Ferramentas)
+### 1. Conectar o fluxo como ferramenta
 
-- No agente **Holiday Assist Moderno**, aba **Criar**, localize o bloco **Ferramentas** (coluna direita).
-- Clique no **➕** do bloco **Ferramentas**.
-- No painel **Adicionar ferramenta**, escolha:
-  ✅ **Novo fluxo de agente** *(New agent flow)*
+Ao voltar do designer do fluxo, o **Holiday Assist Moderno** já reconhece o fluxo publicado. Se ele ainda não estiver listado no bloco **Ferramentas**:
 
-Isso abre o **designer do fluxo** já com a estrutura inicial pronta:
-```
-Quando um agente chama o fluxo   (gatilho)
-        ↓
-Respond to the agent             (resposta — nome mantido em inglês pela plataforma)
-```
+- Na aba **Criar**, bloco **Ferramentas** (coluna direita), clique no **➕**.
+- No painel **Adicionar ferramenta**, aba **Fluxo** (*Flow*), localize e selecione:
+  ✅ **Enviar Aprovacao Ferias Moderno**
+- Confirme para adicionar a ferramenta ao agente.
 
-🚨 **Modo Expresso / resposta assíncrona precisa estar DESLIGADO.** Este toggle aparece no nó do gatilho. **Não pode estar ativo** neste laboratório — confirme que está desligado antes de publicar. Com ele ligado, o fluxo responde antes da hora e a aprovação não é aguardada corretamente.
-
-Não é necessário criar esses dois nós manualmente. O trabalho começa configurando as **entradas** do gatilho.
+✅ Ao final, o fluxo aparece como um item dentro do bloco **Ferramentas** do agente.
 
 ---
 
-### 2. Adicionar as entradas do gatilho
+### 2. Ajustar o nome e a descrição da ferramenta (decisivo)
 
-No nó **Quando um agente chama o fluxo**:
+Clique sobre a ferramenta **Enviar Aprovacao Ferias Moderno** para abrir seus detalhes.
 
-- Clique em **➕ Adicionar uma entrada**.
-- Um menu de tipos abre. Selecione:
-  ✅ **Texto**
-- Dois campos aparecem: o **nome da entrada** (à esquerda) e uma caixa à direita já preenchida com o texto padrão:
+🎯 **A descrição da ferramenta é o que faz o orquestrador decidir chamá-la.** No modelo sem tópico, não existe gatilho fixo — o agente compara a intenção do usuário com esta descrição. Quanto mais clara, melhor o acionamento.
+
+- **Nome de exibição** (pode manter ou ajustar para leitura):
 ```
-Insira sua entrada aqui
+Enviar aprovação de férias
 ```
-  **Apague esse texto** — ele não some sozinho, é texto real que precisa ser removido manualmente.
-- No campo de nome, digite o nome da entrada conforme a tabela.
-- Repita o processo (**➕ Adicionar uma entrada → Texto → apagar o texto padrão → nomear**) para todas.
+- **Descrição** — substitua o texto padrão por:
+```
+Use esta ferramenta quando o colaborador quiser solicitar férias, pedir folga ou registrar um período de ausência e o pedido precisar ser enviado para aprovação de uma pessoa do mesmo tenant. A ferramenta registra o pedido e dispara a aprovação por e-mail. Só a acione depois de já ter coletado data de início, data de término, quantidade de dias, e-mail do aprovador e a observação, e após o colaborador confirmar o resumo.
+```
 
-| # | Nome da entrada | Tipo |
+💡 **Opcional — blindar a demo:** se a plataforma oferecer a opção *"Perguntar antes de executar / exigir confirmação"* nesta ferramenta, **ative-a**. Assim o agente sempre pede o "ok" final antes de disparar — evita que ele chame o fluxo cedo demais durante a apresentação.
+
+---
+
+### 3. Mapear as entradas da ferramenta (o coração do modelo)
+
+Ainda nos detalhes da ferramenta, abra a seção **Entradas** (*Inputs*). As **6 entradas** criadas no Passo 2 aparecem aqui. Para cada uma, defina **como o valor é preenchido**:
+
+- **Preencher dinamicamente com IA** → o agente pergunta ao colaborador na conversa e preenche sozinho.
+- **Valor personalizado / fixo** → você define uma fórmula ou variável de sistema.
+
+Configure conforme a tabela:
+
+| # | Entrada | Como preencher | Valor |
+|---|---|---|---|
+| 1 | **RequesterName** | Valor personalizado | `System.User.DisplayName` |
+| 2 | **ApproverEmail** | Preencher com IA | *(o agente pergunta o e-mail do aprovador)* |
+| 3 | **StartDate** | Preencher com IA | *(o agente pergunta a data de início)* |
+| 4 | **EndDate** | Preencher com IA | *(o agente pergunta a data de término)* |
+| 5 | **Days** | Preencher com IA | *(o agente pergunta a quantidade de dias)* |
+| 6 | **Details** | Preencher com IA | *(o agente pergunta a observação — opcional)* |
+
+🎯 **Por que RequesterName é fixo e o resto é IA:** o nome do solicitante não deve ser digitado — ele vem automaticamente de quem está logado, via **`System.User.DisplayName`**. Os demais dados são justamente o que o agente coleta na conversa, então ficam como **"Preencher com IA"**.
+
+ℹ️ **Diferença-chave para o Clássico:** lá, cada entrada era mapeada manualmente a uma variável do tópico (`DataInicio`, `EmailAprovador` etc.). Aqui **não há variáveis de tópico** — o próprio orquestrador extrai os valores da conversa e preenche. Isso é o que elimina o tópico inteiro.
+
+💡 Se preferir usar o e-mail do usuário logado em vez do nome, troque `System.User.DisplayName` por `System.User.Email` na entrada 1.
+
+---
+
+### 4. Confirmar/refinar as Instruções do agente
+
+Volte ao campo **Instruções** (centro da tela). A versão escrita no Passo 1 já orienta o agente a coletar 1 a 1, resumir e só então acionar a ferramenta. Faça um ajuste fino para **amarrar o nome exato da ferramenta**:
+
+- Confirme que a instrução menciona **acionar a ferramenta de aprovação após a confirmação**. Se quiser ser explícito, ajuste a frase-chave para:
+```
+Somente após o "sim" do colaborador, acione a ferramenta "Enviar aprovação de férias" para registrar o pedido e disparar a aprovação.
+```
+
+⚠️ **Publique depois de qualquer ajuste.** Salvar as instruções não basta — a versão testada só muda após **Publicar**.
+
+---
+
+### 5. Publicar o agente
+
+- Clique em **Publicar** (canto superior direito).
+- Confirme na janela de publicação.
+
+🚨 **Sem publicar, o teste usa a versão anterior.** Todo ajuste de instrução, descrição de ferramenta ou mapeamento de entrada só vale após publicar.
+
+---
+
+### 6. Testar a orquestração ponta a ponta (aba Visualizar)
+
+Abra a aba **Visualizar** e rode o roteiro de demonstração:
+
+1. Inicie com a intenção:
+```
+quero pedir férias
+```
+2. **Confira:** o agente deve **conduzir a conversa, uma pergunta por vez** (data de início → término → dias → e-mail do aprovador → observação) — sem despejar tudo de uma vez, sem tópico.
+3. Responda cada pergunta (use datas no formato DD/MM/AAAA).
+4. **Confira:** o agente apresenta um **resumo** e pede **confirmação**.
+5. Responda:
+```
+sim
+```
+6. **Confira:** o agente responde com a mensagem de confirmação do fluxo (*"Pedido de ferias registrado com sucesso..."*).
+7. **Confira a aprovação:** o card de **Aprovação de ferias** chega por e-mail / Teams para a pessoa definida em **Atribuído a** (você mesmo, se estiver testando sozinho).
+
+---
+
+### 🔧 Se algo não funcionar
+
+| Sintoma | Causa provável | Correção |
 |---|---|---|
-| 1 | RequesterName | Texto |
-| 2 | ApproverEmail | Texto |
-| 3 | StartDate | Texto |
-| 4 | EndDate | Texto |
-| 5 | Days | Texto |
-| 6 | Details | Texto |
-
-📌 **Todas as entradas são do tipo Texto**, inclusive as datas e a quantidade de dias — no modelo moderno, os valores chegam do orquestrador como texto e são mais simples de tratar assim (mesmo princípio do Clássico).
-
-ℹ️ **Por que só 6 entradas (sem RequesterEmail):** nesta versão base, o solicitante não é notificado por e-mail — o nome dele (`RequesterName`) vem automaticamente do usuário logado no Passo 3. Se depois você quiser notificar quem pediu, adicione uma entrada **RequesterEmail** (ver melhoria futura ao final).
+| O agente **não chama** a ferramenta | Descrição da ferramenta fraca ou instrução vaga | Reforce a **descrição** (seção 2) e a instrução de acionamento (seção 4); republique |
+| O agente **despeja todas as perguntas** de uma vez | Instrução não enfatiza "uma pergunta por vez" | Ajuste as instruções (Passo 1, seção 4); republique |
+| O agente chama a ferramenta **cedo demais** | Falta a confirmação antes de executar | Ative *"perguntar antes de executar"* (seção 2, dica) |
+| **RequesterName vazio** no card | Entrada 1 não mapeada corretamente | Confirme `System.User.DisplayName` na entrada 1 (seção 3) |
+| Você **não recebe** o card de aprovação | "Atribuído a" aponta para outra pessoa | Coloque você mesmo em **Atribuído a** (Passo 2, seção 5.3); confira o Histórico de execuções no Power Automate |
+| Alterações **não têm efeito** | Agente não republicado | Clique em **Publicar** (seção 5) |
 
 ---
 
-### 3. Renomear o fluxo
+### 🗂️ Estrutura esperada ao final do laboratório
 
-🔧 As **entradas** (passo 2) podem ser nomeadas diretamente. O que **exige salvar primeiro** é o **nome do fluxo**.
-
-- Adicione as seis entradas normalmente (passo 2).
-- Para renomear o **fluxo em si** (o título geral), primeiro clique em:
-  ✅ **Salvar rascunho** (canto superior direito)
-- Só depois de salvar, o nome do fluxo fica editável. Renomeie para:
 ```
-Enviar Aprovacao Ferias Moderno
+Agente: Holiday Assist Moderno   (Publicado)
+│
+├── Instruções ..................... coleta 1 a 1 + resumo + confirmação + acionar ferramenta
+├── Conhecimento ................... Politica_de_Ferias_Contoso.docx (web desligada)
+├── Orquestração generativa ........ Ativada
+│
+└── Ferramentas
+    └── Enviar aprovação de férias  →  fluxo "Enviar Aprovacao Ferias Moderno"
+        ├── Descrição ............... clara e específica (aciona por intenção)
+        └── Entradas
+            ├── RequesterName ....... System.User.DisplayName (fixo)
+            ├── ApproverEmail ....... Preencher com IA
+            ├── StartDate ........... Preencher com IA
+            ├── EndDate ............. Preencher com IA
+            ├── Days ................ Preencher com IA
+            └── Details ............. Preencher com IA
 ```
-- Salve novamente após renomear.
 
-📌 Nome **com "Moderno"** para não colidir com o fluxo do laboratório clássico ("Enviar Aprovacao de Ferias"), que pode existir no mesmo ambiente.
-⚠️ **Editar o nome do fluxo antes de salvar o rascunho pela primeira vez não funciona.** Sempre salve primeiro, depois renomeie.
+✅ **Resultado esperado:** o **Holiday Assist Moderno** conduz sozinho toda a conversa de férias, coleta os dados um a um, confirma, aciona o fluxo e dispara a aprovação — **sem um único tópico**. Fim do laboratório moderno em **3 passos**.
 
 ---
 
-### ✅ Checkpoint 1
+### 🏁 Comparativo final — Clássico × Moderno
 
-O nó **Quando um agente chama o fluxo** deve mostrar as seis entradas, todas do tipo Texto (ícone "AA"):
-```
-RequesterName
-ApproverEmail
-StartDate
-EndDate
-Days
-Details
-```
+| Aspecto | Clássico | Moderno |
+|---|---|---|
+| Nº de passos | 3 + etapa 1.1 (4 arquivos) | **3 arquivos** |
+| Coleta dos dados | Tópico com 5 nós de pergunta | Instruções + orquestrador |
+| Mapeamento de entradas | Manual (variável a variável) | IA generativa + 1 valor fixo |
+| Nome do solicitante | User.Email mapeado no tópico | `System.User.DisplayName` na entrada |
+| Peça mais trabalhosa | O tópico (~6k tokens de doc) | **Deixou de existir** |
 
----
-
-### 4. Configurar o Respond to the agent
-
-No nó **Respond to the agent**:
-
-- Clique em **➕ Adicionar uma saída**.
-- Escolha o tipo **Texto**.
-- Nomeie a saída:
-```
-Resultado
-```
-- No valor da saída, escreva a confirmação de envio (sem afirmar aprovação, que ainda não aconteceu):
-```
-Pedido de ferias registrado com sucesso e enviado para aprovacao. Voce sera notificado assim que houver uma resposta.
-```
-
-✅ Como a aprovação vem **depois** deste nó, o agente responde ao colaborador imediatamente com esta confirmação — sem esperar ninguém clicar.
-
----
-
-### 5. Adicionar o nó de aprovação
-
-Abaixo de **Respond to the agent**, clique no ícone **➕** e busque por *aprovação*.
-Selecione a ação:
-✅ **Iniciar e aguardar uma aprovação**
-
-🔧 Este é o nó correto. Outros conectores parecidos (como "Criar uma aprovação") **não bloqueiam a execução** e não servem aqui — precisamos que o fluxo espere a resposta, que é o que "Iniciar e aguardar uma aprovação" faz.
-
-#### 5.1 Tipo de aprovação
-No campo **Tipo de aprovação**, selecione:
-✅ **Aprovar/Rejeitar – Primeiro a responder**
-ℹ️ Basta **uma pessoa** responder (aprovar ou rejeitar) para o fluxo continuar — coerente com um aprovador por pedido.
-
-#### 5.2 Título
-No campo **Título** *(obrigatório)*:
-```
-Aprovação de ferias
-```
-
-#### 5.3 Atribuído a
-No campo **Atribuído a** *(obrigatório)*:
-Selecione **uma pessoa específica do seu tenant** — você mesmo ou um colega ao lado.
-
-💡 **Para efeito de treinamento**, este campo fica **fixo** (uma pessoa escolhida manualmente), não dinâmico.
-⚠️ A entrada **ApproverEmail** continua existindo no fluxo, mas **não é usada** neste campo enquanto ele estiver fixo. Se depois você quiser que o aprovador seja o e-mail informado na conversa, troque "Atribuído a" para usar o **conteúdo dinâmico** da entrada ApproverEmail.
-🔧 **Se está testando sozinho, coloque a si mesmo aqui** — não um colega. Se "Atribuído a" apontar para outra pessoa, o card de aprovação chega na caixa **dela**, não na sua. Parece "o flow não foi chamado", mas ele rodou — só a notificação foi para outro lugar. **Antes de assumir falha, confira o Power Automate:** Meus fluxos → Enviar Aprovacao Ferias Moderno → Histórico de execuções.
-
-#### 5.4 Detalhes
-No campo **Detalhes** *(opcional, aceita Markdown)*, monte um resumo combinando texto fixo com o valor de cada entrada:
-
-- Digite o texto fixo, por exemplo `**Solicitante:**`.
-- Passe o mouse sobre o campo — um ícone de **raio (⚡)** aparece na borda direita.
-- Clique no raio. Um painel abre com a lista das entradas do gatilho.
-- Clique na entrada desejada — ela aparece como um **chip azul** dentro do campo.
-- Continue digitando o texto fixo e inserindo os chips até completar o resumo.
-
-Resultado final:
-```
-**Solicitante:** [RequesterName]
-**Periodo:** [StartDate] e [EndDate]
-**Dias:** [Days]
-**Observacao:** [Details]
-```
-✅ Onde aparece `[Nome]`, é um **chip inserido pelo raio (⚡)**, não texto digitado.
-
-#### 5.5 Campos não utilizados
-
-| Campo | Uso neste laboratório |
-|---|---|
-| **Link do item** | Deixar em branco — não há item externo a linkar |
-| **Descrição do link do item** | Deixar em branco |
-| **Parâmetros avançados** | Manter padrões: **Habilitar notificações = Sim**, **Habilitar reatribuição = Sim** |
-
----
-
-### ✅ Checkpoint 2
-
-O fluxo deve estar nesta ordem:
-```
-Quando um agente chama o fluxo
-  (6 entradas: RequesterName, ApproverEmail,
-   StartDate, EndDate, Days, Details)
-  Modo Expresso / Async: desligado
-        ↓
-Respond to the agent
-  (saída: Resultado)
-        ↓
-Iniciar e aguardar uma aprovação
-  Tipo: Aprovar/Rejeitar – Primeiro a responder
-  Título: Aprovação de ferias
-  Atribuído a: [pessoa fixa escolhida]
-  Detalhes: resumo com chips inseridos via raio (⚡)
-```
-
----
-
-### 6. Publicar o fluxo
-
-- Confirme que o **Modo Expresso / resposta assíncrona** está **desligado** (ver aviso na seção 1).
-- Clique em:
-  ✅ **Publicar** (canto superior direito)
-- Uma janela confirma:
-```
-O seu fluxo de agente foi publicado com êxito!
-```
-- Clique em **Voltar ao agente**.
-
-Isso fecha o designer e retorna ao editor do **Holiday Assist Moderno**. O fluxo **Enviar Aprovacao Ferias Moderno** agora existe e está pronto para ser **conectado como ferramenta** — o que fazemos no Passo 3.
-
-✅ **Diferente do Clássico, aqui o fluxo ainda NÃO está mapeado ao agente.** No Clássico, ao voltar do fluxo, o tópico já trazia o nó de ação com as entradas. No moderno, o mapeamento das entradas (IA generativa vs. `System.User.DisplayName`) é feito **no Passo 3**, ao configurar a ferramenta.
-
----
-
-### 🔜 Melhoria futura (opcional)
-
-O que está publicado agora **registra o pedido e envia para aprovação**, mas ainda não trata o resultado (aprovado/recusado) nem notifica quem pediu. Pode ser adicionado depois, sem quebrar o que já funciona:
-
-- Adicionar a entrada **RequesterEmail** ao gatilho.
-- Nó de **Condição** comparando o resultado da aprovação.
-- Notificação ao solicitante (RequesterEmail) com o resultado.
-
-É só editar o fluxo publicado e publicar de novo — sem refazer nada.
-
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1.1 (Moderno-Passo-1.1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+**Navegação:** Passo 3 de 3 · ⬅️ Voltar ao Passo 2 (Moderno-Passo-2.md)

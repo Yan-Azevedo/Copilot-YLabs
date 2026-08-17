@@ -1,9 +1,9 @@
 ## ⚙️ Passo 2 — Criação do Fluxo (Agent Flow) — Experiência Moderna
 
 🎯 **Objetivo desta etapa:** construir o fluxo que recebe os dados coletados pelo agente, confirma o recebimento e envia o pedido para aprovação de forma **assíncrona** — criado **direto do bloco Ferramentas**, sem passar por nenhum tópico.
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1.1 (Moderno-Passo-1.1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1 (Moderno-Passo-1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
 
-> 🆕 **Diferença central para o Clássico:** no Clássico, o fluxo era criado **de dentro do tópico** (nó "Novo fluxo de agente"). Aqui **não há tópico** — o fluxo é criado a partir do bloco **Ferramentas** do próprio agente. O designer do fluxo, porém, é o **mesmo**.
+> 🆕 **Diferença central para o Clássico:** no Clássico, o fluxo era criado **de dentro do tópico** (nó "Novo fluxo de agente"). Aqui **não há tópico** — o fluxo é criado a partir do bloco **Ferramentas** do próprio agente **Holiday Assist Moderno** (criado no Passo 1). O designer do fluxo, porém, é o **mesmo**.
 
 ---
 
@@ -27,9 +27,8 @@ Este passo cobre a construção completa do fluxo até a **publicação** — ve
 
 ### ✅ Pré-requisitos
 
-- Agente **Holiday Assist Moderno** criado e configurado (ver Moderno-Passo-1.md).
-- Conhecimento adicionado (ver Moderno-Passo-1.1.md).
-- Orquestração generativa **Ativada** (confirmado no Passo 1, seção 7).
+- Agente **Holiday Assist Moderno** criado e configurado, com conhecimento adicionado (ver Moderno-Passo-1.md).
+- Orquestração generativa nativa (confirmado no Passo 1, seção 7).
 
 ---
 
@@ -237,4 +236,4 @@ O que está publicado agora **registra o pedido e envia para aprovação**, mas 
 
 É só editar o fluxo publicado e publicar de novo — sem refazer nada.
 
-**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1.1 (Moderno-Passo-1.1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
+**Navegação:** Passo 2 de 3 · ⬅️ Voltar ao Passo 1 (Moderno-Passo-1.md) · Próximo → Passo 3: Conectar e testar (Moderno-Passo-3.md)
